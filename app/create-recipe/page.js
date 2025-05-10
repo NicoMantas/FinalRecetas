@@ -29,7 +29,7 @@ export default function CreateRecipePage() {
         <div>
           <label className="block font-semibold mb-1">Classification:</label>
           <select className="w-full border rounded-lg px-4 py-2">
-            <option>Main Dish</option>
+            <option>Plato Principal</option>
             <option>Dessert</option>
             <option>Drink</option>
             <option>Snack</option>
