@@ -180,7 +180,9 @@ export default function UserProfilePage() {
               }
               onMouseOut={(e) => (e.currentTarget.style.background = "#7b4cf6")}
             >
+              <a href="/list-recipes" className="text-white hover:underline">
               Recipes
+              </a>
             </button>
           </div>
           <div style={{ flex: 0.1 }} />

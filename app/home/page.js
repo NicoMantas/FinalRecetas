@@ -96,7 +96,7 @@ export default function HomePage() {
           <button
             className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Lista"
-            onClick={() => router.push("/list-recipes")}
+            onClick={() => router.push("/inventory")}
           >
             <span>📋</span>
             <span className="ml-3">Lista</span>
