@@ -40,18 +40,21 @@ export default function HomePage() {
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             title="Lista"
+            onClick={() => router.push("/list-recipes")}
           >
             Lista
           </button>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             title="Challenge"
+            onClick={() => router.push("/challenge")}
           >
             Challenge
           </button>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             title="Perfil"
+            onClick={() => router.push("/profile")}
           >
             Perfil Usuario
           </button>
