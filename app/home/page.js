@@ -58,17 +58,25 @@ export default function HomePage() {
       <aside
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`fixed left-0 top-0 h-full bg-orange-600 text-white flex flex-col py-6 px-4 shadow-lg transition-all duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 h-full bg-orange-600 text-white flex flex-col py-6 px-4 shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${
           isSidebarOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full"
         }`}
       >
         {/* Logo/Title */}
-        <div className="text-center text-2xl font-bold mb-8 border-b border-orange-500 pb-4 whitespace-nowrap">
+        <div
+          className={`text-center text-2xl font-bold mb-8 border-b border-orange-500 pb-4 whitespace-nowrap ${
+            isSidebarOpen ? "opacity-100" : "opacity-0"
+          } transition-opacity duration-300`}
+        >
           Reco Menu
         </div>
 
         {/* Navigation Buttons */}
-        <nav className="flex flex-col space-y-4">
+        <nav
+          className={`flex flex-col space-y-4 ${
+            isSidebarOpen ? "opacity-100" : "opacity-0"
+          } transition-opacity duration-300`}
+        >
           <button
             className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Home"
