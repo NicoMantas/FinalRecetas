@@ -1,12 +1,11 @@
 // app/register/page.jsx (si usas App Router en Next.js 13+)
-'use client';
-
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -16,7 +15,10 @@ export default function RegisterPage() {
         </h2>
         <form className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Correo electrónico
             </label>
             <input
@@ -29,7 +31,10 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Contraseña
             </label>
             <input
@@ -42,7 +47,10 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirmar Contraseña
             </label>
             <input
@@ -63,7 +71,7 @@ export default function RegisterPage() {
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
-          ¿Ya tienes una cuenta?{' '}
+          ¿Ya tienes una cuenta?{" "}
           <a href="/login" className="text-green-600 hover:underline">
             Inicia sesión
           </a>

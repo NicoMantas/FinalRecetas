@@ -1,11 +1,11 @@
 // app/login/page.jsx (si usas App Router de Next.js 13+)
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -15,7 +15,10 @@ export default function LoginPage() {
         </h2>
         <form className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Correo electrónico
             </label>
             <input
@@ -28,7 +31,10 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Contraseña
             </label>
             <input
@@ -49,7 +55,7 @@ export default function LoginPage() {
           </button>
         </form>
         <p className="mt-4 text-center text-sm text-gray-600">
-          ¿No tienes una cuenta?{' '}
+          ¿No tienes una cuenta?{" "}
           <a href="/register" className="text-blue-600 hover:underline">
             Regístrate
           </a>

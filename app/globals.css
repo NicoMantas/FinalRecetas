@@ -4,7 +4,17 @@
   --background: #ffffff;
   --foreground: #171717;
 }
-
+    
+    .flex-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  
+    .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

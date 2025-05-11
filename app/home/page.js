@@ -1,68 +1,131 @@
 "use client";
 
 import { useRouter } from "next/navigation"; /*al importar useRouter, se puede usar para redirigir a una página*/
+import { useState, useRef, useEffect } from "react";
 
 export default function HomePage() {
   const router = useRouter(); /* se debe inicializar el router*/
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsSidebarOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsSidebarOpen(false);
+    }, 300); // 300ms delay before closing
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-45 bg-orange-600 text-white flex flex-col justify-between py-6 px-2">
-        {/* Parte superior (título o logo si deseas) */}
-        <div className="text-center text-xl font-bold mb-4">Menu</div>
+      {/* Hamburger Menu Button */}
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="fixed top-4 left-4 z-50"
+      >
+        <button className="p-2 rounded-lg bg-orange-600 text-white hover:bg-orange-500 transition-colors duration-200">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
 
-        {/* Botones centrados verticalmente y distribuidos */}
-        <div className="flex flex-col flex-grow justify-evenly items-center space-y-4">
+      {/* Sidebar */}
+      <aside
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={`fixed left-0 top-0 h-full bg-orange-600 text-white flex flex-col py-6 px-4 shadow-lg transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full"
+        }`}
+      >
+        {/* Logo/Title */}
+        <div className="text-center text-2xl font-bold mb-8 border-b border-orange-500 pb-4 whitespace-nowrap">
+          Reco Menu
+        </div>
+
+        {/* Navigation Buttons */}
+        <nav className="flex flex-col space-y-4">
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            title="Crear Recetas"
-            onClick={() =>
-              router.push("/create-recipe")
-            } /* ⬆ se usa para redirigir a la página de crear recetas*/
-          >
-            Crear Receta
-          </button>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            title="Estadísticas"
-            onClick={() => router.push("/statistics")}
-          >
-            Estadísticas
-          </button>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Home"
-            onClick={() => console.log("Este es el Home")}
+            onClick={() => router.push("/home")}
           >
-            Home
+            <span>🏠</span>
+            <span className="ml-3">Home</span>
           </button>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
+            title="Crear Recetas"
+            onClick={() => router.push("/create-recipe")}
+          >
+            <span>📝</span>
+            <span className="ml-3">Crear Receta</span>
+          </button>
+          <button
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Lista"
             onClick={() => router.push("/list-recipes")}
           >
-            Lista
+            <span>📋</span>
+            <span className="ml-3">Lista</span>
           </button>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Challenge"
             onClick={() => router.push("/challenge")}
           >
-            Challenge
+            <span>🏆</span>
+            <span className="ml-3">Challenge</span>
           </button>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
+            title="Estadísticas"
+            onClick={() => router.push("/statistics")}
+          >
+            <span>📊</span>
+            <span className="ml-3">Estadísticas</span>
+          </button>
+          <button
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Perfil"
             onClick={() => router.push("/profile")}
           >
-            Perfil Usuario
+            <span>👤</span>
+            <span className="ml-3">Perfil Usuario</span>
           </button>
-        </div>
+        </nav>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 bg-orange-200">
+      <main
+        className={`flex-1 p-8 bg-orange-200 transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
         <div className="bg-white rounded-2xl shadow p-6 space-y-6">
           {/* Header */}
           <div className="flex justify-center items-center gap-4">
