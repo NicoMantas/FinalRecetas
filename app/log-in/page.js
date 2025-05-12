@@ -2,10 +2,26 @@
 "use client";
 
 import { useState } from "react";
+import { auth } from "../../firebase/firebase.js"; // Corregir la ruta
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Inicio de sesión exitoso");
+      // Aquí puedes redirigir o guardar estado del usuario
+      router.push("/home"); // Ajusta la ruta según tu página principal
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -49,7 +65,7 @@ export default function LoginPage() {
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200"
-            onClick={(e) => e.preventDefault()} // Por ahora sin funcionalidad
+            onClick={handleLogin}
           >
             Iniciar Sesión
           </button>

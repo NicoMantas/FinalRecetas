@@ -1,11 +1,42 @@
 // app/register/page.jsx (si usas App Router en Next.js 13+)
 "use client";
 import { useState } from "react";
+import { auth } from "../../firebase/firebase.js"; // Ajusta la ruta si es diferente
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { db } from "../../firebase/firebase.js" // ajusta la ruta si es diferente
+import { doc, setDoc } from "firebase/firestore";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Guarda en Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date(),
+      });
+
+      alert("Registro y guardado exitoso");
+      router.push("/home");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -64,7 +95,7 @@ export default function RegisterPage() {
           </div>
           <button
             type="submit"
-            onClick={(e) => e.preventDefault()} // Solo visual por ahora
+            onClick={handleRegister}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition duration-200"
           >
             Registrarse
