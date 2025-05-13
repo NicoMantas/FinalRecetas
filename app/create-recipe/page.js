@@ -39,8 +39,18 @@ export default function CreateRecipePage() {
     setIngredients([...ingredients, '']);
   };
 
+  // Función para eliminar un ingrediente por su índice
+  const removeIngredient = (indexToRemove) => {
+    setIngredients(ingredients.filter((_, index) => index !== indexToRemove));
+  };
+
   const addStep = () => {
     setSteps([...steps, { id: Date.now(), text: '', mediaUrl: null }]);
+  };
+
+  // Función para eliminar un paso por su id
+  const removeStep = (idToRemove) => {
+    setSteps(steps.filter(step => step.id !== idToRemove));
   };
 
   const handleCreateRecipe = async () => {
@@ -74,11 +84,12 @@ export default function CreateRecipePage() {
 
         {/* Clasificación */}
         <div>
-          <label className="block font-semibold mb-1">Classification:</label>
+          <label className="block font-semibold mb-1 text-black">Classification:</label>
+          {/*agregar color negro con 60% opacity */}
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-lg px-4 py-2"
+            className="w-full border rounded-lg px-4 py-2 text-black/60"
           >
             <option>Plato Principal</option>
             <option>Dessert</option>
@@ -89,10 +100,10 @@ export default function CreateRecipePage() {
 
         {/* Nombre del autor */}
         <div>
-          <label className="block font-semibold mb-1">Created by:</label>
+          <label className="block font-semibold mb-1 text-black">Created by:</label>
           <input
             type="text"
-            className="w-full border rounded-lg px-4 py-2"
+            className="w-full border rounded-lg px-4 py-2 text-black/60"
             value={createdBy}
             onChange={(e) => setCreatedBy(e.target.value)}
           />
@@ -100,10 +111,10 @@ export default function CreateRecipePage() {
 
         {/* Nombre de la receta */}
         <div>
-          <label className="block font-semibold mb-1">Recipe Name:</label>
+          <label className="block font-semibold mb-1 text-black">Recipe Name:</label>
           <input
             type="text"
-            className="w-full border rounded-lg px-4 py-2"
+            className="w-full border rounded-lg px-4 py-2 text-black/60"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -111,9 +122,9 @@ export default function CreateRecipePage() {
 
         {/* Descripción */}
         <div>
-          <label className="block font-semibold mb-1">Short Description:</label>
+          <label className="block font-semibold mb-1 text-black">Short Description:</label>
           <textarea
-            className="w-full border rounded-lg px-4 py-2"
+            className="w-full border rounded-lg px-4 py-2 text-black/60"
             rows="3"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -122,33 +133,46 @@ export default function CreateRecipePage() {
 
         {/* Ingredientes */}
         <div>
-          <label className="block font-semibold mb-2">Ingredients:</label>
+          <label className="block font-semibold mb-2 text-black">Ingredients:</label>
           {ingredients.map((ingredient, index) => (
-            <input
-              key={index}
-              type="text"
-              className="w-full border rounded-lg px-4 py-2 mb-2"
-              placeholder={`Ingredient ${index + 1}`}
-              value={ingredient}
-              onChange={(e) => {
-                const newIngredients = [...ingredients];
-                newIngredients[index] = e.target.value;
-                setIngredients(newIngredients);
-              }}
-            />
+            // Usamos un div con flex para alinear input y botón
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                className="flex-grow border rounded-lg px-4 py-2 text-black/60" // 'flex-grow' para que ocupe el espacio disponible
+                placeholder={`Ingredient ${index + 1}`}
+                value={ingredient}
+                onChange={(e) => {
+                  const newIngredients = [...ingredients];
+                  newIngredients[index] = e.target.value;
+                  setIngredients(newIngredients);
+                }}
+              />
+              {/* Botón para eliminar este ingrediente (solo si hay más de uno) */}
+              {ingredients.length > 1 && (
+                <button
+                  type="button" // Importante para que no envíe el formulario si estuviera dentro de uno
+                  onClick={() => removeIngredient(index)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                >
+                  Eliminar
+                </button>
+              )}
+            </div>
           ))}
-          <button onClick={addIngredient} className="text-sm text-blue-600 hover:underline">
+          <button onClick={addIngredient} className="text-sm text-blue-600 hover:underline mt-2">
             + Add Ingredient
           </button>
         </div>
 
-        {/* Pasos */}
+        {/* Pasos -> steps*/}
         <div>
-          <label className="block font-semibold mb-2">Steps:</label>
+          <label className="block font-semibold mb-2 text-black">Steps:</label>
           {steps.map((step, index) => (
-            <div key={step.id} className="space-y-2 mb-4">
+            // Div para alinear textarea y botón
+            <div key={step.id} className="flex items-start gap-2 mb-2"> {/* items-start para alinear arriba */} 
               <textarea
-                className="w-full border rounded-lg px-4 py-2"
+                className="flex-grow border rounded-lg px-4 py-2 text-black/60"
                 rows="2"
                 placeholder={`Step ${index + 1}`}
                 value={step.text}
@@ -158,9 +182,19 @@ export default function CreateRecipePage() {
                   setSteps(newSteps);
                 }}
               />
+               {/* Botón para eliminar este paso (solo si hay más de uno) */}
+               {steps.length > 1 && (
+                  <button 
+                    type="button"
+                    onClick={() => removeStep(step.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm flex-shrink-0" // flex-shrink-0 para que no se encoja
+                  >
+                    Eliminar
+                  </button>
+               )}
             </div>
           ))}
-          <button onClick={addStep} className="text-sm text-blue-600 hover:underline">
+          <button onClick={addStep} className="text-sm text-blue-600 hover:underline mt-2">
             + Add Step
           </button>
         </div>
