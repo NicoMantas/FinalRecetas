@@ -1,5 +1,5 @@
 "use client";
-import withAuth from "../../components/withAuth";
+import withAuth from "../components/withAuth";
 
 function ChallengePage() {
   // aca se define el reto del dia, luego se debemos usar la api de gmini ia para obtener el reto del dia
