@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import withAuth from "../components/withAuth";
 
 const createRecipe = async (recipeData) => {
   try {
@@ -26,7 +27,7 @@ const createRecipe = async (recipeData) => {
   }
 };
 
-export default function CreateRecipePage() {
+function CreateRecipePage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [createdBy, setCreatedBy] = useState('');
@@ -212,3 +213,5 @@ export default function CreateRecipePage() {
     </div>
   );
 }
+
+export default withAuth(CreateRecipePage);

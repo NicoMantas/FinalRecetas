@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"; /*al importar useRouter, se puede usar para redirigir a una página*/
 import { useState, useRef, useEffect } from "react";
+import withAuth from "../components/withAuth"; // Importar el HOC
 
-export default function HomePage() {
+function HomePage() {
   const router = useRouter(); /* se debe inicializar el router*/
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const timeoutRef = useRef(null);
@@ -219,3 +220,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+export default withAuth(HomePage); // Exportar el componente envuelto

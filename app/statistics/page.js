@@ -1,6 +1,7 @@
 "use client"; /*se debe usar use client para que el componente se renderice en el cliente*/
+import withAuth from "../components/withAuth"; // Importar el HOC
 
-export default function StatisticsPage() {
+function StatisticsPage() {
   /*se debe exportar el componente*/
   return (
     <div
@@ -147,3 +148,5 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+export default withAuth(StatisticsPage); // Exportar componente envuelto

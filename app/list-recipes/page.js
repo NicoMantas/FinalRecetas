@@ -1,6 +1,7 @@
 "use client";
+import withAuth from "../components/withAuth";
 
-export default function ListRecipesPage() {
+function ListRecipesPage() {
   // Ejemplo de recetas (esto se reemplazará por datos reales más adelante)
   const recipes = [
     {
@@ -112,3 +113,5 @@ export default function ListRecipesPage() {
     </div>
   );
 }
+
+export default withAuth(ListRecipesPage);

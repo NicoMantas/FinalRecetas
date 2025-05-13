@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import withAuth from "../components/withAuth";
 
-export default function InventoryPage() {
+function InventoryPage() {
   const [ingredients, setIngredients] = useState([
     { id: 1, name: 'Tomato', quantity: '5', image: '/images/tomato.png' },
     { id: 2, name: 'Cheese', quantity: '2 blocks', image: '/images/cheese.png' },
@@ -78,3 +79,5 @@ export default function InventoryPage() {
     </div>
   );
 }
+
+export default withAuth(InventoryPage);

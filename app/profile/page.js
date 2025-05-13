@@ -1,11 +1,26 @@
 "use client";
+import withAuth from "../components/withAuth";
+import { auth } from "../../firebase/firebase";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
-export default function UserProfilePage() {
+function UserProfilePage() {
+  const router = useRouter();
   // Datos de ejemplo
   const user = {
     name: "Nombre de usuario",
     email: "Email de usuario",
     photoUrl: "https://randomuser.me/api/portraits/men/44.jpg", //esto es una api de imagenes ramdons
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/log-in");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      alert("Hubo un error al cerrar sesión.");
+    }
   };
 
   return (
@@ -247,6 +262,7 @@ export default function UserProfilePage() {
           </div>
         </div>
         <button
+          onClick={handleLogout}
           style={{
             width: "70%",
             background: "#4ce69e",
@@ -271,3 +287,5 @@ export default function UserProfilePage() {
     </div>
   );
 }
+
+export default withAuth(UserProfilePage);

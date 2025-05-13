@@ -1,6 +1,7 @@
 "use client";
+import withAuth from "../../components/withAuth";
 
-export default function ChallengePage() {
+function ChallengePage() {
   // aca se define el reto del dia, luego se debemos usar la api de gmini ia para obtener el reto del dia
   const challenge = {
     name: "Reto del Día: Pasta Creativa",
@@ -67,3 +68,5 @@ export default function ChallengePage() {
     </div>
   );
 }
+
+export default withAuth(ChallengePage);
