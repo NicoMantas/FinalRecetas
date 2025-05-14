@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import withAuth from "../components/withAuth";
+import CollapsibleSidebarLayout from '../components/CollapsibleSidebarLayout';
 
 const createRecipe = async (recipeData) => {
   try {
@@ -35,12 +36,12 @@ function CreateRecipePage() {
   const [ingredients, setIngredients] = useState(['']);
   const [steps, setSteps] = useState([{ id: Date.now(), text: '', mediaUrl: null }]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const addIngredient = () => {
     setIngredients([...ingredients, '']);
   };
 
-  // Función para eliminar un ingrediente por su índice
   const removeIngredient = (indexToRemove) => {
     setIngredients(ingredients.filter((_, index) => index !== indexToRemove));
   };
@@ -49,19 +50,18 @@ function CreateRecipePage() {
     setSteps([...steps, { id: Date.now(), text: '', mediaUrl: null }]);
   };
 
-  // Función para eliminar un paso por su id
   const removeStep = (idToRemove) => {
     setSteps(steps.filter(step => step.id !== idToRemove));
   };
 
   const handleCreateRecipe = async () => {
-    // Validación simple
     if (!title || !description || !createdBy || ingredients.some(i => i.trim() === '') || steps.some(s => s.text.trim() === '')) {
-      setError('Por favor, complete todos los campos.');
+      setError('Por favor, complete todos los campos obligatorios.');
       return;
     }
 
     setError('');
+    setIsLoading(true);
 
     const recipeData = {
       title,
@@ -69,148 +69,171 @@ function CreateRecipePage() {
       createdBy,
       category,
       ingredients: ingredients.filter(i => i.trim() !== '').map(name => ({ name })),
-      steps: steps.map(({ text, mediaUrl }) => ({ text, mediaUrl })),
+      steps: steps.filter(s => s.text.trim() !== '').map(({ text, mediaUrl }) => ({ text, mediaUrl })),
     };
 
-    await createRecipe(recipeData);
+    const result = await createRecipe(recipeData);
+    if (result) {
+      // Optionally reset form or redirect
+      // setTitle('');
+      // setDescription('');
+      // setCreatedBy('');
+      // setCategory('Plato Principal');
+      // setIngredients(['']);
+      // setSteps([{ id: Date.now(), text: '', mediaUrl: null }]);
+    }
+    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-orange-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-center text-orange-600">Create a New Recipe</h1>
+    <CollapsibleSidebarLayout>
+      <div className="p-4 md:p-8">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-center text-orange-600 mb-8">Crear Nueva Receta</h1>
 
-        {/* Error message */}
-        {error && <div className="text-red-600">{error}</div>}
+          {error && 
+            <div className="p-3 mb-4 bg-red-100 text-red-700 border border-red-300 rounded-lg text-center">
+              {error}
+            </div>
+          }
 
-        {/* Clasificación */}
-        <div>
-          <label className="block font-semibold mb-1 text-black">Classification:</label>
-          {/*agregar color negro con 60% opacity */}
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border rounded-lg px-4 py-2 text-black/60"
-          >
-            <option>Plato Principal</option>
-            <option>Dessert</option>
-            <option>Drink</option>
-            <option>Snack</option>
-          </select>
-        </div>
+          <form onSubmit={(e) => { e.preventDefault(); handleCreateRecipe(); }} className="space-y-6">
+            <div>
+              <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-1">Categoría:</label>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+              >
+                <option>Plato Principal</option>
+                <option>Postre</option>
+                <option>Bebida</option>
+                <option>Aperitivo</option>
+              </select>
+            </div>
 
-        {/* Nombre del autor */}
-        <div>
-          <label className="block font-semibold mb-1 text-black">Created by:</label>
-          <input
-            type="text"
-            className="w-full border rounded-lg px-4 py-2 text-black/60"
-            value={createdBy}
-            onChange={(e) => setCreatedBy(e.target.value)}
-          />
-        </div>
-
-        {/* Nombre de la receta */}
-        <div>
-          <label className="block font-semibold mb-1 text-black">Recipe Name:</label>
-          <input
-            type="text"
-            className="w-full border rounded-lg px-4 py-2 text-black/60"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-
-        {/* Descripción */}
-        <div>
-          <label className="block font-semibold mb-1 text-black">Short Description:</label>
-          <textarea
-            className="w-full border rounded-lg px-4 py-2 text-black/60"
-            rows="3"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </div>
-
-        {/* Ingredientes */}
-        <div>
-          <label className="block font-semibold mb-2 text-black">Ingredients:</label>
-          {ingredients.map((ingredient, index) => (
-            // Usamos un div con flex para alinear input y botón
-            (<div key={index} className="flex items-center gap-2 mb-2">
+            <div>
+              <label htmlFor="createdBy" className="block text-sm font-semibold text-gray-700 mb-1">Autor:</label>
               <input
+                id="createdBy"
                 type="text"
-                className="flex-grow border rounded-lg px-4 py-2 text-black/60" // 'flex-grow' para que ocupe el espacio disponible
-                placeholder={`Ingredient ${index + 1}`}
-                value={ingredient}
-                onChange={(e) => {
-                  const newIngredients = [...ingredients];
-                  newIngredients[index] = e.target.value;
-                  setIngredients(newIngredients);
-                }}
+                placeholder="Nombre del creador"
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                value={createdBy}
+                onChange={(e) => setCreatedBy(e.target.value)}
               />
-              {/* Botón para eliminar este ingrediente (solo si hay más de uno) */}
-              {ingredients.length > 1 && (
-                <button
-                  type="button" // Importante para que no envíe el formulario si estuviera dentro de uno
-                  onClick={() => removeIngredient(index)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
-                >
-                  Eliminar
-                </button>
-              )}
-            </div>)
-          ))}
-          <button onClick={addIngredient} className="text-sm text-blue-600 hover:underline mt-2">
-            + Add Ingredient
-          </button>
-        </div>
+            </div>
 
-        {/* Pasos -> steps*/}
-        <div>
-          <label className="block font-semibold mb-2 text-black">Steps:</label>
-          {steps.map((step, index) => (
-            // Div para alinear textarea y botón
-            (<div key={step.id} className="flex items-start gap-2 mb-2"> {/* items-start para alinear arriba */}
+            <div>
+              <label htmlFor="recipeName" className="block text-sm font-semibold text-gray-700 mb-1">Nombre de la Receta:</label>
+              <input
+                id="recipeName"
+                type="text"
+                placeholder="Ej: Tarta de Manzana Clásica"
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-1">Descripción Corta:</label>
               <textarea
-                className="flex-grow border rounded-lg px-4 py-2 text-black/60"
-                rows="2"
-                placeholder={`Step ${index + 1}`}
-                value={step.text}
-                onChange={(e) => {
-                  const newSteps = [...steps];
-                  newSteps[index].text = e.target.value;
-                  setSteps(newSteps);
-                }}
-              />
-              {/* Botón para eliminar este paso (solo si hay más de uno) */}
-              {steps.length > 1 && (
-                 <button 
-                   type="button"
-                   onClick={() => removeStep(step.id)}
-                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm flex-shrink-0" // flex-shrink-0 para que no se encoja
-                 >
-                   Eliminar
-                 </button>
-              )}
-            </div>)
-          ))}
-          <button onClick={addStep} className="text-sm text-blue-600 hover:underline mt-2">
-            + Add Step
-          </button>
-        </div>
+                id="description"
+                placeholder="Una breve descripción de tu receta..."
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                rows="4"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
+            </div>
 
-        {/* Botones */}
-        <div className="flex justify-end gap-4 pt-4">
-          <button
-            onClick={handleCreateRecipe}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-          >
-            Create Recipe
-          </button>
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Ingredientes:</label>
+              {ingredients.map((ingredient, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                    placeholder={`Ingrediente ${index + 1}`}
+                    value={ingredient}
+                    onChange={(e) => {
+                      const newIngredients = [...ingredients];
+                      newIngredients[index] = e.target.value;
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  {ingredients.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeIngredient(index)}
+                      className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm shadow-md"
+                    >
+                      Eliminar
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button 
+                type="button" 
+                onClick={addIngredient} 
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium hover:underline mt-2 py-2 px-3 border border-orange-500 rounded-lg hover:bg-orange-50 transition-colors"
+              >
+                + Añadir Ingrediente
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Pasos:</label>
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-start gap-3">
+                  <textarea
+                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                    rows="3"
+                    placeholder={`Paso ${index + 1}`}
+                    value={step.text}
+                    onChange={(e) => {
+                      const newSteps = [...steps];
+                      newSteps[index].text = e.target.value;
+                      setSteps(newSteps);
+                    }}
+                  />
+                  {steps.length > 1 && (
+                     <button 
+                       type="button"
+                       onClick={() => removeStep(step.id)}
+                       className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm shadow-md flex-shrink-0 mt-1"
+                     >
+                       Eliminar
+                     </button>
+                  )}
+                </div>
+              ))}
+              <button 
+                type="button" 
+                onClick={addStep} 
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium hover:underline mt-2 py-2 px-3 border border-orange-500 rounded-lg hover:bg-orange-50 transition-colors"
+              >
+                + Añadir Paso
+              </button>
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 ${
+                  isLoading ? "bg-orange-300 cursor-not-allowed" : ""
+                }`}
+              >
+                {isLoading ? "Creando Receta..." : "Crear Receta"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+    </CollapsibleSidebarLayout>
   );
 }
 

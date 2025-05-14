@@ -1,151 +1,116 @@
 "use client"; /*se debe usar use client para que el componente se renderice en el cliente*/
 import withAuth from "../components/withAuth"; // Importar el HOC
+import CollapsibleSidebarLayout from '../components/CollapsibleSidebarLayout'; // Added import
+// Consider adding a charting library like Chart.js or Recharts for more advanced visualizations
+
+// Mock data for statistics (replace with actual data fetching and processing)
+const userStats = {
+  recipesCreated: 12,
+  recipesFavorited: 45,
+  challengesCompleted: 5,
+  averageRatingReceived: 4.7,
+  mostActiveDay: "Miércoles",
+  favoriteCategory: "Postres",
+  // Example data for a simple chart (e.g., recipes created per month)
+  monthlyCreations: [
+    { month: "Ene", count: 2 },
+    { month: "Feb", count: 3 },
+    { month: "Mar", count: 1 },
+    { month: "Abr", count: 4 },
+    { month: "May", count: 2 }, // Current month (assuming)
+  ],
+};
 
 function StatisticsPage() {
-  /*se debe exportar el componente*/
+  // For more complex charts, you would process data here or fetch it
+  const maxMonthlyCreation = Math.max(...userStats.monthlyCreations.map(m => m.count), 0) || 5; // Ensure not 0 for division
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f8b6a0",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "40px 0",
-      }}
-    >
-      <div
-        style={{
-          background: "#c6f6fa",
-          borderRadius: "16px",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-          padding: "32px",
-          width: "420px",
-          maxWidth: "95vw",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "28px",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            marginBottom: "8px",
-            color: "#222",
-          }}
-        >
-          Así que, ¿qué tal has estado cocinando?
-        </h1>
-        <div
-          style={{
-            width: "100%",
-            background: "#fff",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-            padding: "16px",
-            textAlign: "center",
-            fontWeight: "500",
-            fontSize: "1.1rem",
-          }}
-        >
-          Estadisticas de la semana
+    <CollapsibleSidebarLayout>
+      <div className="p-4 md:p-8"> {/* Main content padding */}
+        <header className="mb-8 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold text-orange-700">Tus Estadísticas Culinarias</h1>
+          <p className="text-lg text-orange-600 mt-1">Un resumen de tu actividad y logros en ReinventandoCocina.</p>
+        </header>
+
+        {/* Grid for key statistics cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-4xl font-bold text-orange-500">{userStats.recipesCreated}</h2>
+            <p className="text-gray-600 mt-1">Recetas Creadas</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-4xl font-bold text-orange-500">{userStats.recipesFavorited}</h2>
+            <p className="text-gray-600 mt-1">Recetas Favoritas</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-4xl font-bold text-orange-500">{userStats.challengesCompleted}</h2>
+            <p className="text-gray-600 mt-1">Desafíos Completados</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-4xl font-bold text-orange-500">
+              {userStats.averageRatingReceived.toFixed(1)} <span className="text-2xl">⭐</span>
+            </h2>
+            <p className="text-gray-600 mt-1">Valoración Promedio</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-2xl font-semibold text-orange-500">{userStats.mostActiveDay}</h2>
+            <p className="text-gray-600 mt-1">Día Más Activo</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow">
+            <h2 className="text-2xl font-semibold text-orange-500">{userStats.favoriteCategory}</h2>
+            <p className="text-gray-600 mt-1">Categoría Favorita</p>
+          </div>
         </div>
-        <div
-          style={{
-            width: "100%",
-            background: "#e6fcf5",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-            padding: "24px",
-            textAlign: "center",
-            fontWeight: "500",
-            fontSize: "1.1rem",
-          }}
-        >
-          Reporte de la semana
+
+        {/* Section for Charts - Placeholder for more advanced charts */}
+        <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg mb-10">
+          <h2 className="text-2xl font-semibold text-orange-700 mb-6 text-center">Actividad Mensual (Recetas Creadas)</h2>
+          {userStats.monthlyCreations.length > 0 ? (
+            <div className="flex justify-around items-end h-64 bg-orange-50 p-4 rounded-lg border border-orange-200">
+              {userStats.monthlyCreations.map((data) => (
+                <div key={data.month} className="flex flex-col items-center w-1/6">
+                  <div
+                    className="w-10 md:w-12 bg-orange-400 hover:bg-orange-500 transition-colors rounded-t-md"
+                    style={{ height: `${(data.count / maxMonthlyCreation) * 100}%` }}
+                    title={`${data.count} recetas`}
+                  ></div>
+                  <p className="text-xs md:text-sm text-gray-600 mt-2">{data.month}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-10">No hay suficientes datos para mostrar el gráfico de actividad.</p>
+          )}
+          <p className="text-sm text-gray-500 mt-4 text-center">*Gráfico simplificado. Considera una librería de gráficos para visualizaciones más detalladas.</p>
         </div>
-        <div
-          style={{
-            width: "100%",
-            background: "#fff",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-            padding: "16px",
-            textAlign: "center",
-            fontWeight: "500",
-            fontSize: "1.05rem",
-          }}
-        >
-          Aora veamos tus estadisticas en graficos
+
+        {/* Placeholder for other types of charts or statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-semibold text-orange-700 mb-4">Participación en Desafíos</h3>
+                {/* Placeholder for a pie chart or detailed stats */}
+                <div className="flex items-center justify-center h-40 bg-orange-50 rounded-lg border border-orange-200">
+                    <svg width="80" height="80" viewBox="0 0 36 36" className="text-orange-400">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" strokeWidth="3.8" />
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" fill="none" stroke="currentColor" strokeWidth="3.8" strokeDasharray="60, 100" strokeDashoffset="-25" />
+                        <text x="18" y="20.35" className="fill-current text-xs font-semibold" textAnchor="middle">60%</text>
+                    </svg>
+                </div>
+                 <p className="text-sm text-gray-500 mt-3 text-center">60% de desafíos semanales completados.</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-xl font-semibold text-orange-700 mb-4">Popularidad de Tus Recetas</h3>
+                {/* Placeholder for top recipes or average views */}
+                <div className="text-center py-4">
+                    <p className="text-gray-600"><span className="font-bold text-orange-500">"Tarta de Limón Celestial"</span> es tu receta más vista este mes.</p>
+                    <p className="text-sm text-gray-500 mt-2">1,200 vistas | 85 favoritos</p>
+                </div> 
+            </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "32px",
-            marginTop: "12px",
-          }}
-        >
-          {/* Pie Chart SVG */}
-          <svg width="80" height="80" viewBox="0 0 80 80">
-            <circle
-              cx="40"
-              cy="40"
-              r="32"
-              stroke="#222"
-              strokeWidth="4"
-              fill="none"
-            />
-            <path
-              d="M40 40 L40 8 A32 32 0 0 1 72 40 Z"
-              fill="#a0e1fa"
-              stroke="#222"
-              strokeWidth="2"
-            />
-            <line
-              x1="40"
-              y1="40"
-              x2="40"
-              y2="8"
-              stroke="#222"
-              strokeWidth="3"
-            />
-          </svg>
-          {/* Bar Chart SVG */}
-          <svg width="80" height="80" viewBox="0 0 80 80">
-            <rect
-              x="12"
-              y="50"
-              width="14"
-              height="18"
-              fill="#a0e1fa"
-              stroke="#222"
-              strokeWidth="3"
-            />
-            <rect
-              x="32"
-              y="36"
-              width="14"
-              height="32"
-              fill="#a0e1fa"
-              stroke="#222"
-              strokeWidth="3"
-            />
-            <rect
-              x="52"
-              y="22"
-              width="14"
-              height="46"
-              fill="#a0e1fa"
-              stroke="#222"
-              strokeWidth="3"
-            />
-          </svg>
-        </div>
+
       </div>
-    </div>
+    </CollapsibleSidebarLayout>
   );
 }
 

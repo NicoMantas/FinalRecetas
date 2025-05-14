@@ -135,14 +135,15 @@ function UserProfilePage() {
                 </svg>
                 Recipes
               </a>
-              <Link href="/favorites" passHref legacyBehavior>
-                <a className="flex flex-col items-center justify-center bg-rose-100 hover:bg-rose-200 text-rose-700 font-semibold py-4 px-4 rounded-lg shadow hover:shadow-md transition-all duration-300">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-2 text-rose-600">
-                    <rect x="3" y="5" width="18" height="14" rx="3" fill="currentColor" opacity="0.3" />
-                    <path d="M12 9.5l1.09 2.21 2.41.35-1.75 1.71.41 2.39L12 14.77l-2.16 1.14.41-2.39-1.75-1.71 2.41-.35L12 9.5z" fill="#f6c177" stroke="currentColor" strokeWidth="0.5" />
-                  </svg>
-                  Favourite
-                </a>
+              <Link
+                href="/favorites"
+                className="flex flex-col items-center justify-center bg-rose-100 hover:bg-rose-200 text-rose-700 font-semibold py-4 px-4 rounded-lg shadow hover:shadow-md transition-all duration-300"
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-2 text-rose-600">
+                  <rect x="3" y="5" width="18" height="14" rx="3" fill="currentColor" opacity="0.3" />
+                  <path d="M12 9.5l1.09 2.21 2.41.35-1.75 1.71.41 2.39L12 14.77l-2.16 1.14.41-2.39-1.75-1.71 2.41-.35L12 9.5z" fill="#f6c177" stroke="currentColor" strokeWidth="0.5" />
+                </svg>
+                Favourite
               </Link>
             </div>
 
