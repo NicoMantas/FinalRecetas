@@ -96,14 +96,6 @@ function HomePage() {
           </button>
           <button
             className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
-            title="Lista de Recetas" // Added this to match the layout component
-            onClick={() => router.push("/list-recipes")}
-          >
-            <span>📖</span>
-            <span className="ml-3">Tus Recetas</span>
-          </button>
-          <button
-            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
             title="Inventario" // Changed from Lista
             onClick={() => router.push("/inventory")}
           >

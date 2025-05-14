@@ -90,14 +90,6 @@ function CollapsibleSidebarLayout({ children }) {
             <button
               className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
               title="Lista de Recetas"
-              onClick={() => router.push("/list-recipes")}
-            >
-              <span>📖</span>
-              <span className="ml-3">Tus Recetas</span>
-            </button>
-            <button
-              className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
-              title="Inventario/Lista de Compras"
               onClick={() => router.push("/inventory")}
             >
               <span>📋</span>
