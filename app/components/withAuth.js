@@ -6,7 +6,7 @@ import { auth } from "../../firebase/firebase"; // Ajusta la ruta si es necesari
 import { onAuthStateChanged } from "firebase/auth";
 
 const withAuth = (WrappedComponent) => {
-  return (props) => {
+  const WithAuth = (props) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -39,6 +39,10 @@ const withAuth = (WrappedComponent) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithAuth.displayName = `WithAuth(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
+
+  return WithAuth;
 };
 
-export default withAuth; 
+export default withAuth;
