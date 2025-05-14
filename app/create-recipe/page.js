@@ -137,7 +137,7 @@ function CreateRecipePage() {
           <label className="block font-semibold mb-2 text-black">Ingredients:</label>
           {ingredients.map((ingredient, index) => (
             // Usamos un div con flex para alinear input y botón
-            <div key={index} className="flex items-center gap-2 mb-2">
+            (<div key={index} className="flex items-center gap-2 mb-2">
               <input
                 type="text"
                 className="flex-grow border rounded-lg px-4 py-2 text-black/60" // 'flex-grow' para que ocupe el espacio disponible
@@ -159,7 +159,7 @@ function CreateRecipePage() {
                   Eliminar
                 </button>
               )}
-            </div>
+            </div>)
           ))}
           <button onClick={addIngredient} className="text-sm text-blue-600 hover:underline mt-2">
             + Add Ingredient
@@ -171,7 +171,7 @@ function CreateRecipePage() {
           <label className="block font-semibold mb-2 text-black">Steps:</label>
           {steps.map((step, index) => (
             // Div para alinear textarea y botón
-            <div key={step.id} className="flex items-start gap-2 mb-2"> {/* items-start para alinear arriba */} 
+            (<div key={step.id} className="flex items-start gap-2 mb-2"> {/* items-start para alinear arriba */}
               <textarea
                 className="flex-grow border rounded-lg px-4 py-2 text-black/60"
                 rows="2"
@@ -183,17 +183,17 @@ function CreateRecipePage() {
                   setSteps(newSteps);
                 }}
               />
-               {/* Botón para eliminar este paso (solo si hay más de uno) */}
-               {steps.length > 1 && (
-                  <button 
-                    type="button"
-                    onClick={() => removeStep(step.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm flex-shrink-0" // flex-shrink-0 para que no se encoja
-                  >
-                    Eliminar
-                  </button>
-               )}
-            </div>
+              {/* Botón para eliminar este paso (solo si hay más de uno) */}
+              {steps.length > 1 && (
+                 <button 
+                   type="button"
+                   onClick={() => removeStep(step.id)}
+                   className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm flex-shrink-0" // flex-shrink-0 para que no se encoja
+                 >
+                   Eliminar
+                 </button>
+              )}
+            </div>)
           ))}
           <button onClick={addStep} className="text-sm text-blue-600 hover:underline mt-2">
             + Add Step

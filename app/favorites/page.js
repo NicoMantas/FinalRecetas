@@ -185,7 +185,7 @@ function FavoritesPage() {
         <h1 style={mainTitleStyle}>
           Mis Recetas Favoritas
         </h1>
-        <Link href="/profile" passHref>
+        <Link href="/profile" passHref legacyBehavior>
           <button 
             style={profileButtonStyle} 
             onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00695c'} 
@@ -195,7 +195,6 @@ function FavoritesPage() {
           </button>
         </Link>
       </div>
-
       {loading ? (
         <p style={{ color: "#004d40", fontSize: "1.5rem", textAlign: 'center' }}>Cargando tus favoritas...</p>
       ) : favoriteRecipes.length === 0 ? (
@@ -211,7 +210,10 @@ function FavoritesPage() {
               <h2 style={recipeTitleStyle}>{recipe.title}</h2>
               <p style={recipeDescriptionStyle}>{recipe.description}</p>
               <div style={actionsContainerStyle}>
-                <Link href={`/details-recipe/${recipe.id}?from=favorites`} passHref>
+                <Link
+                  href={`/details-recipe/${recipe.id}?from=favorites`}
+                  passHref
+                  legacyBehavior>
                   <button 
                     style={detailsButtonStyle}
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00897b'} 

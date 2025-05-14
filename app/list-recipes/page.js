@@ -217,13 +217,12 @@ function ListRecipesPage() {
         <h1 style={mainTitleStyle}>
           Tus Recetas
         </h1>
-        <Link href="/profile" passHref>
+        <Link href="/profile" passHref legacyBehavior>
           <button style={profileButtonStyle} onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00695c'} onMouseOut={(e) => e.currentTarget.style.backgroundColor='#00796b'}>
             Volver al Perfil
           </button>
         </Link>
       </div>
-
       {loading ? (
         <p style={{ color: "#004d40", fontSize: "1.5rem", textAlign: 'center' }}>Cargando recetas...</p>
       ) : recipes.length === 0 ? (
@@ -243,7 +242,7 @@ function ListRecipesPage() {
                 {recipe.description}
               </p>
               <div style={recipeActionsStyle}>
-                <Link href={`/details-recipe/${recipe.id}`} passHref>
+                <Link href={`/details-recipe/${recipe.id}`} passHref legacyBehavior>
                   <button 
                     style={detailsButtonStyle} 
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00897b'} 
