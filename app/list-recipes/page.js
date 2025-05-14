@@ -1,13 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/firebase"; // Assuming firebase.js is in a firebase folder at the root
+import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { db, auth } from "../../firebase/firebase"; // Assuming firebase.js is in a firebase folder at the root
 import Link from "next/link";
 import withAuth from "../components/withAuth";
 
 function ListRecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [favorites, setFavorites] = useState(new Set());
+  const [currentUser, setCurrentUser] = useState(null);
   // Ejemplo de recetas (esto se reemplazará por datos reales más adelante)
   // const recipes = [
   //   {
@@ -28,22 +30,76 @@ function ListRecipesPage() {
   // ];
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const recipesCollection = collection(db, "recipes");
-        const recipeSnapshot = await getDocs(recipesCollection);
-        const recipesList = recipeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setRecipes(recipesList);
-      } catch (error) {
-        console.error("Error fetching recipes: ", error);
-        // Aquí podrías manejar el error, por ejemplo, mostrando un mensaje al usuario
-      } finally {
-        setLoading(false);
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      setLoading(true);
+      if (user) {
+        setCurrentUser(user);
+        await fetchRecipes(); // Fetch all recipes
+        await fetchFavorites(user.uid); // Then fetch user's favorites
+      } else {
+        setCurrentUser(null);
+        setRecipes([]); // Clear recipes if user logs out
+        setFavorites(new Set()); // Clear favorites
       }
-    };
-
-    fetchRecipes();
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
+
+  const fetchRecipes = async () => {
+    // setLoading(true); // setLoading is handled in onAuthStateChanged
+    try {
+      const recipesCollection = collection(db, "recipes");
+      const recipeSnapshot = await getDocs(recipesCollection);
+      const recipesList = recipeSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setRecipes(recipesList);
+    } catch (error) {
+      console.error("Error fetching recipes: ", error);
+    }
+  };
+
+  const fetchFavorites = async (userId) => {
+    if (!userId) return;
+    try {
+      const favoritesCollection = collection(db, "users", userId, "favorites");
+      const favoritesSnapshot = await getDocs(favoritesCollection);
+      const favoriteIds = new Set(favoritesSnapshot.docs.map(doc => doc.id));
+      setFavorites(favoriteIds);
+    } catch (error) {
+      console.error("Error fetching favorites: ", error);
+      // Potentially set an error state here to inform the user
+    }
+  };
+
+  const toggleFavorite = async (recipeId) => {
+    if (!currentUser) {
+      console.error("No user logged in");
+      // Optionally, redirect to login or show a message
+      return;
+    }
+    const userId = currentUser.uid;
+    const favDocRef = doc(db, "users", userId, "favorites", recipeId);
+    
+    try {
+      if (favorites.has(recipeId)) {
+        // Remove from favorites
+        await deleteDoc(favDocRef);
+        setFavorites(prevFavorites => {
+          const newFavorites = new Set(prevFavorites);
+          newFavorites.delete(recipeId);
+          return newFavorites;
+        });
+      } else {
+        // Add to favorites
+        // Storing a simple marker or timestamp. Could also store recipe title/summary for optimization.
+        await setDoc(favDocRef, { favoritedAt: new Date() });
+        setFavorites(prevFavorites => new Set(prevFavorites).add(recipeId));
+      }
+    } catch (error) {
+      console.error("Error toggling favorite: ", error);
+      // Display error to user
+    }
+  };
 
   // Styles
   const pageStyle = {
@@ -134,6 +190,27 @@ function ListRecipesPage() {
     transition: 'background-color 0.2s ease',
   };
 
+  const recipeActionsStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: '10px', // Add some space above the actions
+  };
+
+  const favoriteButtonStyle = {
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: "5px",
+    fontSize: "1.5rem", // Adjust size as needed
+    color: "#fbc02d", // Yellow star color
+  };
+
+  const favoritedButtonStyle = {
+    ...favoriteButtonStyle,
+    color: "#f57f17", // Darker yellow for favorited
+  };
+
   return (
     <div style={pageStyle}>
       <div style={headerContainerStyle}>
@@ -165,15 +242,24 @@ function ListRecipesPage() {
               <p style={recipeDescriptionStyle}>
                 {recipe.description}
               </p>
-              <Link href={`/details-recipe/${recipe.id}`} passHref>
+              <div style={recipeActionsStyle}>
+                <Link href={`/details-recipe/${recipe.id}`} passHref>
+                  <button 
+                    style={detailsButtonStyle} 
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00897b'} 
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor='#26a69a'}
+                  >
+                    Ver detalles
+                  </button>
+                </Link>
                 <button 
-                  style={detailsButtonStyle} 
-                  onMouseOver={(e) => e.currentTarget.style.backgroundColor='#00897b'} 
-                  onMouseOut={(e) => e.currentTarget.style.backgroundColor='#26a69a'}
+                  onClick={() => toggleFavorite(recipe.id)} 
+                  style={favorites.has(recipe.id) ? favoritedButtonStyle : favoriteButtonStyle}
+                  title={favorites.has(recipe.id) ? "Quitar de favoritos" : "Añadir a favoritos"}
                 >
-                  Ver detalles
+                  {favorites.has(recipe.id) ? '★' : '☆'} 
                 </button>
-              </Link>
+              </div>
             </div>
           ))}
         </div>

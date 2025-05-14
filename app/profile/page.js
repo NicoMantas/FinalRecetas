@@ -5,6 +5,7 @@ import { auth } from "../../firebase/firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import CollapsibleSidebarLayout from "../components/CollapsibleSidebarLayout";
+import Link from "next/link";
 
 function UserProfilePage() {
   const router = useRouter();
@@ -80,202 +81,135 @@ function UserProfilePage() {
     }
   };
 
-  // Styles for the white profile card itself
-  const profileCardStyle = {
-    background: "#fff",
-    borderRadius: "22px",
-    boxShadow: "0 6px 32px rgba(0,0,0,0.13)",
-    padding: "38px 32px 32px 32px",
-    width: "400px",
-    maxWidth: "95vw",
+  // Styles for the main content area of the profile page (orange background)
+  const profilePageMainStyle = {
+    background: "#f68706",
+    padding: "2rem", // Using rem for padding, equivalent to p-8 in Tailwind
+    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  };
-
-  // Styles for Modal (can be moved to a separate CSS file or module later)
-  const modalOverlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000, // Ensure modal is on top
-  };
-
-  const modalContentStyle = {
-    background: 'white',
-    padding: '30px',
-    borderRadius: '12px',
-    boxShadow: '0 5px 20px rgba(0,0,0,0.2)',
-    width: '450px',
-    maxWidth: '90vw',
-  };
-
-  const modalLabelStyle = {
-    display: 'block',
-    marginBottom: '8px',
-    fontWeight: '500',
-    color: '#555',
-  };
-
-  const modalInputStyle = {
-    width: '100%',
-    padding: '10px 12px',
-    border: '1px solid #ccc',
-    borderRadius: '6px',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
-  };
-
-  const modalButtonStyle = {
-    padding: '10px 20px',
-    borderRadius: '6px',
-    border: 'none',
-    cursor: 'pointer',
-    fontWeight: '500',
-    fontSize: '0.95rem',
-    transition: 'background-color 0.2s ease',
-  };
-
-  const modalButtonStyleCancel = {
-    ...modalButtonStyle,
-    backgroundColor: '#6c757d', // Gray
-    color: 'white',
-  };
-
-  const modalButtonStyleUpdate = {
-    ...modalButtonStyle,
-    backgroundColor: '#007bff', // Blue
-    color: 'white',
+    justifyContent: "center",
+    minHeight: "100%"
   };
 
   return (
     <CollapsibleSidebarLayout>
-      <div 
-        style={{
-          background: "#f68706", // Dominant orange background
-          padding: "40px 20px",    // Padding around the white card
-          display: "flex",         // Use flex to center content
-          flexDirection: "column",
-          alignItems: "center",     // Center card horizontally
-          justifyContent: "center", // Center card vertically
-          minHeight: "100%"        // Ensure it tries to fill the parent's height from the layout
-        }}
-      >
-        <div style={profileCardStyle}>
-          <h1 style={{ fontSize: "1.7rem", fontWeight: "bold", color: "#222", marginBottom: "18px", letterSpacing: "0.5px" }}>
-            User Profile
-          </h1>
-          <div style={{ display: "flex", alignItems: "center", width: "100%", marginBottom: "18px", gap: 18 }}>
+      <div style={profilePageMainStyle}>
+        {/* Profile Card - Refactored with Tailwind CSS */}
+        <div className="bg-white rounded-xl shadow-2xl p-8 md:p-10 w-full max-w-md md:max-w-lg transform transition-all duration-500 hover:scale-105">
+          <div className="text-center">
             <img
               src={user.photoUrl}
               alt="User"
-              style={{ width: 76, height: 76, borderRadius: "50%", objectFit: "cover", border: "3px solid #f68706", boxShadow: "0 2px 8px rgba(246,135,6,0.10)" }}
+              className="w-24 h-24 md:w-28 md:h-28 rounded-full mx-auto object-cover border-4 border-orange-400 shadow-lg"
             />
-            <div style={{ flex: 1, marginLeft: 12 }}>
-              <div style={{ background: "#3ec6fa", borderRadius: "8px", padding: "10px 18px 8px 18px", color: "#fff", fontWeight: "600", fontSize: "1.13rem", marginBottom: 6, boxShadow: "0 1px 4px rgba(62,198,250,0.08)" }}>
-                {user.name}
-              </div>
-              <div style={{ color: "#666", fontSize: "0.98rem", marginLeft: 2, wordBreak: 'break-all' }}>
-                {user.email}
-              </div>
-            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mt-6 mb-1">
+              {user.name}
+            </h1>
+            <p className="text-sm md:text-base text-gray-600 mb-6 break-all">
+              {user.email}
+            </p>
           </div>
-          <hr style={{ width: "100%", border: 0, borderTop: "1.5px solid #f3f3f3", margin: "18px 0 22px 0" }} />
-          <button 
-            style={{ width: "100%", background: "#8f4cf6", color: "#fff", border: "none", borderRadius: "14px", padding: "13px 0", fontWeight: "600", fontSize: "1.08rem", marginBottom: "28px", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", transition: "background 0.2s" }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#6d2ed6")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "#8f4cf6")}
-            onClick={handleOpenSettingsModal}
-          >
-            Settings
-          </button>
-          <div style={{ display: "flex", justifyContent: "space-between", width: "100%", marginBottom: "32px", gap: 18 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, background: "#f7f7fd", borderRadius: 12, padding: "16px 0 10px 0", boxShadow: "0 1px 4px rgba(143,76,246,0.04)" }}>
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style={{ marginBottom: 6 }}>
-                <rect x="3" y="5" width="18" height="14" rx="3" fill="#e0e7ff" stroke="#7b4cf6" strokeWidth="1.5" />
-                <circle cx="8" cy="10" r="2" fill="#8f4cf6" />
-                <path d="M5 17l4-5 4 3 4-6 2 3v5z" fill="#c7d2fe" stroke="#7b4cf6" strokeWidth="1.2" />
-              </svg>
-              <button 
-                style={{ background: "#7b4cf6", color: "#fff", border: "none", borderRadius: "10px", padding: "7px 18px", fontWeight: "500", fontSize: "1rem", cursor: "pointer", marginBottom: 2, marginTop: 2, transition: "background 0.2s" }}
-                onMouseOver={(e) => (e.currentTarget.style.background = "#6d2ed6")}
-                onMouseOut={(e) => (e.currentTarget.style.background = "#7b4cf6")}
+
+          <hr className="my-6 border-gray-200" />
+
+          {/* Action Buttons */}
+          <div className="space-y-4">
+            <button
+              onClick={handleOpenSettingsModal}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            >
+              Settings
+            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a // Changed button to a styled <a> tag for direct navigation
+                href="/list-recipes"
+                className="flex flex-col items-center justify-center bg-sky-100 hover:bg-sky-200 text-sky-700 font-semibold py-4 px-4 rounded-lg shadow hover:shadow-md transition-all duration-300 text-center"
               >
-                <a href="/list-recipes" className="text-white hover:underline">Recipes</a>
-              </button>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-2 text-sky-600">
+                  <rect x="3" y="5" width="18" height="14" rx="3" fill="currentColor" opacity="0.3" />
+                  <circle cx="8" cy="10" r="2" fill="currentColor" />
+                  <path d="M5 17l4-5 4 3 4-6 2 3v5z" fill="currentColor" opacity="0.6" />
+                </svg>
+                Recipes
+              </a>
+              <Link href="/favorites" passHref legacyBehavior>
+                <a className="flex flex-col items-center justify-center bg-rose-100 hover:bg-rose-200 text-rose-700 font-semibold py-4 px-4 rounded-lg shadow hover:shadow-md transition-all duration-300">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="mb-2 text-rose-600">
+                    <rect x="3" y="5" width="18" height="14" rx="3" fill="currentColor" opacity="0.3" />
+                    <path d="M12 9.5l1.09 2.21 2.41.35-1.75 1.71.41 2.39L12 14.77l-2.16 1.14.41-2.39-1.75-1.71 2.41-.35L12 9.5z" fill="#f6c177" stroke="currentColor" strokeWidth="0.5" />
+                  </svg>
+                  Favourite
+                </a>
+              </Link>
             </div>
-            <div style={{ flex: 0.1 }} />
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, background: "#f7f7fd", borderRadius: 12, padding: "16px 0 10px 0", boxShadow: "0 1px 4px rgba(143,76,246,0.04)" }}>
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style={{ marginBottom: 6 }}>
-                <rect x="3" y="5" width="18" height="14" rx="3" fill="#e0e7ff" stroke="#7b4cf6" strokeWidth="1.5" />
-                <path d="M12 9.5l1.09 2.21 2.41.35-1.75 1.71.41 2.39L12 14.77l-2.16 1.14.41-2.39-1.75-1.71 2.41-.35L12 9.5z" fill="#f6c177" stroke="#7b4cf6" strokeWidth="1" />
-              </svg>
-              <button 
-                style={{ background: "#7b4cf6", color: "#fff", border: "none", borderRadius: "10px", padding: "7px 18px", fontWeight: "500", fontSize: "1rem", cursor: "pointer", marginBottom: 2, marginTop: 2, transition: "background 0.2s" }}
-                onMouseOver={(e) => (e.currentTarget.style.background = "#6d2ed6")}
-                onMouseOut={(e) => (e.currentTarget.style.background = "#7b4cf6")}
-              >
-                Favourite
-              </button>
-            </div>
+
+            <button
+              onClick={handleLogout}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mt-2"
+            >
+              Log out
+            </button>
           </div>
-          <button
-            onClick={handleLogout}
-            style={{ width: "70%", background: "#4ce69e", color: "#222", border: "none", borderRadius: "8px", padding: "12px 0", fontWeight: "600", fontSize: "1.08rem", margin: "0 auto", display: "block", cursor: "pointer", marginTop: 8, transition: "background 0.2s" }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#2fc47a")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "#4ce69e")}
-          >
-            Log out
-          </button>
         </div>
+
+        {/* Settings Modal - Refactored with Tailwind CSS */}
+        {isSettingsModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+            <div className="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
+                Actualizar Nombre de Usuario
+              </h2>
+              
+              {settingsError && (
+                <p className="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm text-center">
+                  {settingsError}
+                </p>
+              )}
+              
+              <div className="mb-6">
+                <label htmlFor="userNameInput" className="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario:</label>
+                <input 
+                  type="text" 
+                  id="userNameInput"
+                  value={newName} 
+                  onChange={(e) => setNewName(e.target.value)} 
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-base"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button 
+                  type="button" // Explicit type to prevent form submission if wrapped in form later
+                  onClick={() => setIsSettingsModalOpen(false)}
+                  disabled={settingsLoading}
+                  className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors duration-300 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="button"
+                  onClick={handleUpdateSettings}
+                  disabled={settingsLoading}
+                  className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition-colors duration-300 disabled:opacity-50 disabled:bg-indigo-400"
+                >
+                  {settingsLoading ? (
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Actualizando...
+                    </div>
+                  ) : 'Actualizar'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Settings Modal */}
-      {isSettingsModalOpen && (
-        <div style={modalOverlayStyle}>
-          <div style={modalContentStyle}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#333', marginBottom: '20px', textAlign: 'center' }}>
-              Actualizar Nombre de Usuario
-            </h2>
-            
-            {settingsError && <p style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>{settingsError}</p>}
-            
-            <div style={{ marginBottom: '20px' }}>
-              <label htmlFor="userNameInput" style={modalLabelStyle}>Nombre de Usuario:</label>
-              <input 
-                type="text" 
-                id="userNameInput"
-                value={newName} 
-                onChange={(e) => setNewName(e.target.value)} 
-                style={modalInputStyle}
-              />
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button 
-                style={modalButtonStyleCancel} 
-                onClick={() => setIsSettingsModalOpen(false)}
-                disabled={settingsLoading}
-              >
-                Cancelar
-              </button>
-              <button 
-                style={modalButtonStyleUpdate} 
-                onClick={handleUpdateSettings}
-                disabled={settingsLoading}
-              >
-                {settingsLoading ? 'Actualizando...' : 'Actualizar'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </CollapsibleSidebarLayout>
   );
 }

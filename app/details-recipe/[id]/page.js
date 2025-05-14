@@ -1,46 +1,78 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../../firebase/firebase.js'; // Adjust path based on your firebase.js location
-import { useParams, useRouter } from 'next/navigation'; // To get route params and useRouter
+import { doc, getDoc, deleteDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../../../firebase/firebase.js'; // Adjust path based on your firebase.js location
+import { useParams, useRouter, useSearchParams } from 'next/navigation'; // To get route params, useRouter, and useSearchParams
 import Link from 'next/link'; // Added Link
 
 function RecipeDetailPage() {
   const params = useParams();
   const router = useRouter(); // For navigation
+  const searchParams = useSearchParams(); // Get search params
   const { id } = params; // Get the recipe ID from the URL
 
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false); // To track if current recipe is a favorite
+
+  const fromFavorites = searchParams.get('from') === 'favorites';
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+      // If the user logs out while on this page, how should we handle it?
+      // For now, we just set currentUser. Operations requiring user will check.
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (id) {
-      const fetchRecipe = async () => {
+      const fetchRecipeAndFavoriteStatus = async () => {
         setLoading(true);
         setError(null);
         try {
+          // Fetch recipe details
           const recipeRef = doc(db, 'recipes', id);
           const recipeSnap = await getDoc(recipeRef);
 
           if (recipeSnap.exists()) {
             setRecipe({ id: recipeSnap.id, ...recipeSnap.data() });
+            // If we have a user, check if this recipe is in their favorites
+            if (auth.currentUser) {
+              const favDocRef = doc(db, "users", auth.currentUser.uid, "favorites", id);
+              const favSnap = await getDoc(favDocRef);
+              setIsFavorite(favSnap.exists());
+            }
           } else {
             setError('Receta no encontrada.');
             console.log('No such document!');
           }
         } catch (err) {
-          console.error("Error fetching recipe: ", err);
-          setError('Error al cargar la receta.');
+          console.error("Error fetching recipe data: ", err);
+          setError('Error al cargar los datos de la receta.');
         } finally {
           setLoading(false);
         }
       };
-
-      fetchRecipe();
+      fetchRecipeAndFavoriteStatus();
     }
-  }, [id]); // Re-run effect if ID changes
+  }, [id]); // Re-run effect if ID changes (user UID could also be a dependency if we fetch fav status here only)
+
+  // Effect to check favorite status when currentUser or recipe ID changes
+  useEffect(() => {
+    if (currentUser && id) {
+      const checkFavoriteStatus = async () => {
+        const favDocRef = doc(db, "users", currentUser.uid, "favorites", id);
+        const favSnap = await getDoc(favDocRef);
+        setIsFavorite(favSnap.exists());
+      };
+      checkFavoriteStatus();
+    }
+  }, [currentUser, id]);
 
   const handleDelete = async () => {
     if (window.confirm("¿Estás seguro de que quieres eliminar esta receta? Esta acción no se puede deshacer.")) {
@@ -52,6 +84,39 @@ function RecipeDetailPage() {
         console.error("Error deleting recipe: ", error);
         alert("Error al eliminar la receta.");
       }
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!currentUser) {
+      alert("Debes iniciar sesión para gestionar tus favoritos.");
+      return;
+    }
+    const userId = currentUser.uid;
+    const favDocRef = doc(db, "users", userId, "favorites", id);
+
+    setLoading(true); // Indicate activity
+    try {
+      if (isFavorite) {
+        // Remove from favorites
+        await deleteDoc(favDocRef);
+        setIsFavorite(false);
+        alert("Receta eliminada de favoritos.");
+        if (fromFavorites) {
+           // Optionally, navigate back or simply update UI
+           // router.push('/favorites'); 
+        }
+      } else {
+        // Add to favorites
+        await setDoc(favDocRef, { favoritedAt: new Date() });
+        setIsFavorite(true);
+        alert("Receta añadida a favoritos.");
+      }
+    } catch (error) {
+      console.error("Error toggling favorite: ", error);
+      alert("Error al actualizar favoritos.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -225,13 +290,32 @@ function RecipeDetailPage() {
         )}
 
         <div style={buttonGroupStyle}>
-          <Link href="/profile" passHref>
-            <button style={primaryButtonStyle}>Volver al perfil</button>
-          </Link>
-          <Link href={`/edit-recipe/${id}`} passHref>
-            <button style={secondaryButtonStyle}>Actualizar Receta</button>
-          </Link>
-          <button onClick={handleDelete} style={dangerButtonStyle}>Eliminar Receta</button>
+          {fromFavorites ? (
+            <>
+              <Link href="/favorites" passHref>
+                <button style={primaryButtonStyle}>Volver a Favoritos</button>
+              </Link>
+              <button onClick={handleToggleFavorite} style={isFavorite ? dangerButtonStyle : secondaryButtonStyle}>
+                {isFavorite ? "Quitar de Favoritos" : "Añadir a Favoritos"}
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/list-recipes" passHref> {/* Default back button */} 
+                <button style={primaryButtonStyle}>Volver al listado</button>
+              </Link>
+              <Link href={`/edit-recipe/${id}`} passHref>
+                <button style={secondaryButtonStyle}>Actualizar Receta</button>
+              </Link>
+              <button onClick={handleDelete} style={dangerButtonStyle}>Eliminar Receta</button>
+              {/* Add to/Remove from Favorites button for non-favorites context too */}
+              {currentUser && (
+                <button onClick={handleToggleFavorite} style={isFavorite ? dangerButtonStyle : primaryButtonStyle } title={isFavorite ? "Quitar de Favoritos" : "Añadir a Favoritos"}>
+                  {isFavorite ? '★ Quitado' : '☆ Añadir Favorito'}
+                </button>
+              )}
+            </>
+          )}
         </div>
 
       </div>
