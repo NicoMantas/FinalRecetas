@@ -96,11 +96,19 @@ function HomePage() {
           </button>
           <button
             className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
-            title="Lista"
+            title="Lista de Recetas" // Added this to match the layout component
+            onClick={() => router.push("/list-recipes")}
+          >
+            <span>📖</span>
+            <span className="ml-3">Tus Recetas</span>
+          </button>
+          <button
+            className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
+            title="Inventario" // Changed from Lista
             onClick={() => router.push("/inventory")}
           >
             <span>📋</span>
-            <span className="ml-3">Lista</span>
+            <span className="ml-3">Inventario</span>
           </button>
           <button
             className="flex items-center px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200 whitespace-nowrap"
@@ -168,7 +176,7 @@ function HomePage() {
             <h2 className="text-center text-lg font-bold text-gray-800 mb-4">
               Searches Most Frequent This Week
             </h2>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-4 flex-wrap"> {/* Added flex-wrap */}
               <button className="bg-purple-600 text-white px-4 py-1 rounded-full hover:bg-purple-700">
                 Pastas
               </button>
@@ -192,16 +200,16 @@ function HomePage() {
               className="w-full px-4 py-2 border rounded-lg shadow-sm"
             />
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"> {/* Added lg:grid-cols-5 */}
               {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-lg shadow p-2 text-center"
+                  className="bg-white rounded-lg shadow p-2 text-center hover:shadow-md transition-shadow cursor-pointer" /* Added hover effects */
                 >
                   <div className="w-full h-24 bg-gray-300 rounded-lg mb-2">
                     {/* Imagen de receta */}
                   </div>
-                  <div className="text-sm font-medium">Name Food</div>
+                  <div className="text-sm font-medium text-gray-700">Name Food</div> {/* Text color change */}
                 </div>
               ))}
             </div>
