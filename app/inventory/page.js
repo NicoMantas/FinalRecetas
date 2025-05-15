@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import withAuth from "../components/withAuth";
 import CollapsibleSidebarLayout from '../components/CollapsibleSidebarLayout';
 
@@ -61,7 +62,7 @@ function InventoryPage() {
 
           {ingredients.length === 0 ? (
             <div className="text-center py-10 bg-white rounded-xl shadow-lg">
-              <img src="/images/empty-inventory.svg" alt="Inventario Vacío" className="mx-auto h-40 w-40 mb-6" />
+              <Image src="/images/empty-inventory.svg" alt="Inventario Vacío" className="mx-auto h-40 w-40 mb-6" width={160} height={160} />
               <h2 className="text-2xl font-semibold text-orange-600 mb-2">Tu inventario está vacío</h2>
               <p className="text-gray-600 mb-6">Empieza añadiendo ingredientes para llevar un control.</p>
               <button
@@ -78,10 +79,12 @@ function InventoryPage() {
                   key={item.id}
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col"
                 >
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.name}
                     className="w-full h-48 object-cover"
+                    width={192}
+                    height={192}
                     onError={(e) => { e.target.onerror = null; e.target.src='/images/placeholder-ingredient.png'; }}
                   />
                   <div className="p-5 flex flex-col flex-grow">

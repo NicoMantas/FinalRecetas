@@ -6,6 +6,7 @@ import { signOut, updateProfile } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import CollapsibleSidebarLayout from "../components/CollapsibleSidebarLayout";
 import Link from "next/link";
+import Image from 'next/image';
 
 function UserProfilePage() {
   const router = useRouter();
@@ -99,10 +100,12 @@ function UserProfilePage() {
         {/* Profile Card - Refactored with Tailwind CSS */}
         <div className="bg-white rounded-xl shadow-2xl p-8 md:p-10 w-full max-w-md md:max-w-lg transform transition-all duration-500 hover:scale-105">
           <div className="text-center">
-            <img
+            <Image
               src={user.photoUrl}
               alt="User"
               className="w-24 h-24 md:w-28 md:h-28 rounded-full mx-auto object-cover border-4 border-orange-400 shadow-lg"
+              width={112}
+              height={112}
             />
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mt-6 mb-1">
               {user.name}

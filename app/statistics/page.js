@@ -103,7 +103,7 @@ function StatisticsPage() {
                 <h3 className="text-xl font-semibold text-orange-700 mb-4">Popularidad de Tus Recetas</h3>
                 {/* Placeholder for top recipes or average views */}
                 <div className="text-center py-4">
-                    <p className="text-gray-600"><span className="font-bold text-orange-500">"Tarta de Limón Celestial"</span> es tu receta más vista este mes.</p>
+                    <p className="text-gray-600"><span className="font-bold text-orange-500">&quot;Tarta de Limón Celestial&quot;</span> es tu receta más vista este mes.</p>
                     <p className="text-sm text-gray-500 mt-2">1,200 vistas | 85 favoritos</p>
                 </div> 
             </div>
