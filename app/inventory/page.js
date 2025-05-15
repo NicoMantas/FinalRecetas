@@ -152,7 +152,7 @@ function InventoryPage() {
                     type="submit"
                     className="px-5 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
                   >
-                    Guardar Ingrediente
+                    Guardar Ingredientes
                   </button>
                 </div>
               </form>
@@ -163,5 +163,4 @@ function InventoryPage() {
     </CollapsibleSidebarLayout>
   );
 }
-
 export default withAuth(InventoryPage);
