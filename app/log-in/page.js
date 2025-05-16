@@ -26,13 +26,20 @@ export default function LoginPage() {
       router.push("/home"); // Ajusta la ruta según tu página principal
     } catch (error) {
       console.error("Login error:", error); // Log the error for debugging
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        setError("Correo electrónico o contraseña incorrectos. Inténtalo de nuevo.");
-      } else if (error.code === 'auth/invalid-email') {
+      if (
+        error.code === "auth/invalid-credential" ||
+        error.code === "auth/user-not-found" ||
+        error.code === "auth/wrong-password"
+      ) {
+        setError(
+          "Correo electrónico o contraseña incorrectos. Inténtalo de nuevo."
+        );
+      } else if (error.code === "auth/invalid-email") {
         setError("El formato del correo electrónico no es válido.");
-      }
-       else {
-        setError("Ocurrió un error al iniciar sesión. Por favor, inténtalo más tarde.");
+      } else {
+        setError(
+          "Ocurrió un error al iniciar sesión. Por favor, inténtalo más tarde."
+        );
       }
     }
   };
@@ -73,6 +80,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                style={{ color: "black" }}
               />
             </div>
             <div>
@@ -91,6 +99,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                style={{ color: "black" }}
               />
               {/* Optional: Add "Forgot password?" link here */}
             </div>

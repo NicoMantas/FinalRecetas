@@ -38,7 +38,11 @@ export default function RegisterPage() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Guarda en Firestore
@@ -46,7 +50,7 @@ export default function RegisterPage() {
         uid: user.uid,
         email: user.email,
         // Consider adding a displayName or username field if you collect it
-        // username: "", 
+        // username: "",
         createdAt: new Date(),
         // Initialize other user-specific fields if needed
         // favorites: [],
@@ -57,14 +61,20 @@ export default function RegisterPage() {
       router.push("/home"); // Redirect to home or a profile setup page
     } catch (error) {
       console.error("Registration error:", error);
-      if (error.code === 'auth/email-already-in-use') {
-        setError("Este correo electrónico ya está registrado. Intenta iniciar sesión.");
-      } else if (error.code === 'auth/invalid-email') {
+      if (error.code === "auth/email-already-in-use") {
+        setError(
+          "Este correo electrónico ya está registrado. Intenta iniciar sesión."
+        );
+      } else if (error.code === "auth/invalid-email") {
         setError("El formato del correo electrónico no es válido.");
-      } else if (error.code === 'auth/weak-password') {
-        setError("La contraseña es demasiado débil. Intenta con una más segura.");
+      } else if (error.code === "auth/weak-password") {
+        setError(
+          "La contraseña es demasiado débil. Intenta con una más segura."
+        );
       } else {
-        setError("Ocurrió un error durante el registro. Por favor, inténtalo más tarde.");
+        setError(
+          "Ocurrió un error durante el registro. Por favor, inténtalo más tarde."
+        );
       }
     } finally {
       setIsLoading(false);
@@ -74,7 +84,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-orange-50 to-orange-200 p-4">
       <div className="w-full max-w-md">
-         {/* Logo or App Name - Consistent with Login Page */}
+        {/* Logo or App Name - Consistent with Login Page */}
         <div className="text-center mb-8">
           <Link href="/" className="text-4xl font-bold text-orange-600">
             ReinventandoCocina
@@ -107,6 +117,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                style={{ color: "black" }}
               />
             </div>
             <div>
@@ -125,6 +136,7 @@ export default function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                style={{ color: "black" }}
               />
             </div>
             <div>
@@ -143,6 +155,7 @@ export default function RegisterPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                style={{ color: "black" }}
               />
             </div>
             <button

@@ -15,10 +15,19 @@ export default function Home() {
             ReinventandoCocina
           </Link>
           <div className="space-x-4">
-            <Link href="/recipes" className="hover:text-orange-500">Recetas</Link>
-            <Link href="/categories" className="hover:text-orange-500">Categorías</Link>
-            <Link href="/blog" className="hover:text-orange-500">Blog</Link>
-            <Link href="/log-in" className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">
+            <Link href="/recipes" className="hover:text-orange-500">
+              Recetas
+            </Link>
+            <Link href="/categories" className="hover:text-orange-500">
+              Categorías
+            </Link>
+            <Link href="/blog" className="hover:text-orange-500">
+              Blog
+            </Link>
+            <Link
+              href="/log-in"
+              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
+            >
               Acceder
             </Link>
           </div>
@@ -31,10 +40,12 @@ export default function Home() {
           Reinventa Tu Cocina
         </h1>
         <p className="text-xl md:text-2xl text-orange-600 max-w-3xl mx-auto mb-10">
-          Explora un universo de sabores, comparte tus creaciones culinarias y conecta con una comunidad apasionada por la gastronomía. ¡Tu próxima aventura en la cocina comienza aquí!
+          Explora un universo de sabores, comparte tus creaciones culinarias y
+          conecta con una comunidad apasionada por la gastronomía. ¡Tu próxima
+          aventura en la cocina comienza aquí!
         </p>
         <Link
-          href="/recipes" // Changed from /log-in to /recipes for a more direct engagement
+          href="/log-in" // Changed from /log-in to /recipes for a more direct engagement
           className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full text-xl transition-all duration-300 transform hover:scale-105 shadow-xl"
         >
           Explorar Recetas
@@ -55,7 +66,8 @@ export default function Home() {
                 Descubre Sabores
               </h3>
               <p className="text-gray-700 text-lg">
-                Navega por cientos de recetas creativas y tradicionales, perfectas para cualquier ocasión.
+                Navega por cientos de recetas creativas y tradicionales,
+                perfectas para cualquier ocasión.
               </p>
             </div>
             {/* Feature 2: Share Your Creations */}
@@ -65,7 +77,8 @@ export default function Home() {
                 Comparte Tu Pasión
               </h3>
               <p className="text-gray-700 text-lg">
-                Publica tus propias recetas, trucos de cocina y inspira a otros amantes de la gastronomía.
+                Publica tus propias recetas, trucos de cocina y inspira a otros
+                amantes de la gastronomía.
               </p>
             </div>
             {/* Feature 3: Learn and Grow */}
@@ -75,7 +88,8 @@ export default function Home() {
                 Aprende y Evoluciona
               </h3>
               <p className="text-gray-700 text-lg">
-                Mejora tus habilidades culinarias con consejos, técnicas y el apoyo de nuestra comunidad.
+                Mejora tus habilidades culinarias con consejos, técnicas y el
+                apoyo de nuestra comunidad.
               </p>
             </div>
           </div>
