@@ -1,8 +1,6 @@
+
 import Image from "next/image";
 import Link from "next/link";
-
-// Placeholder for an icon library if you choose to use one
-// import { BookOpenIcon, ShareIcon, LightBulbIcon, UserCircleIcon } from '@heroicons/react/outline';
 
 export default function Home() {
   return (
@@ -11,7 +9,6 @@ export default function Home() {
       <nav className="bg-white shadow-md">
         <div className="container mx-auto px-6 py-3 flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold text-orange-600">
-            {/* Replace with your actual logo */}
             ReinventandoCocina
           </Link>
           <div className="space-x-4">
@@ -34,34 +31,40 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-orange-700 mb-6">
-          Reinventa Tu Cocina
-        </h1>
-        <p className="text-xl md:text-2xl text-orange-600 max-w-3xl mx-auto mb-10">
-          Explora un universo de sabores, comparte tus creaciones culinarias y
-          conecta con una comunidad apasionada por la gastronomía. ¡Tu próxima
-          aventura en la cocina comienza aquí!
-        </p>
-        <Link
-          href="/log-in" // Changed from /log-in to /recipes for a more direct engagement
-          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full text-xl transition-all duration-300 transform hover:scale-105 shadow-xl"
-        >
-          Explorar Recetas
-        </Link>
+      {/* Hero Section with Custom Background Image */}
+      <main
+        className="container mx-auto px-4 py-20 text-center bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url('/comida.jpg')`,
+        }}
+      >
+        <div className="absolute inset-0 bg-orange-900/50"></div>
+        <div className="relative z-10">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            Reinventa Tu Cocina
+          </h1>
+          <p className="text-xl md:text-2xl text-orange-100 max-w-3xl mx-auto mb-10">
+            Explora un universo de sabores, comparte tus creaciones culinarias y
+            conecta con una comunidad apasionada por la gastronomía. ¡Tu próxima
+            aventura en la cocina comienza aquí!
+          </p>
+          <Link
+            href="/recipes"
+            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-full text-xl transition-all duration-300 transform hover:scale-105 shadow-xl"
+          >
+            Explorar Recetas
+          </Link>
+        </div>
       </main>
 
-      {/* Features Section - Will be enhanced next */}
+      {/* Features Section */}
       <section className="py-16 bg-orange-50">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-orange-700 text-center mb-12">
             ¿Qué puedes hacer?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1: Explore Recipes */}
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              {/* Optional: Add an icon here */}
               <h3 className="text-2xl font-semibold text-orange-700 mb-3">
                 Descubre Sabores
               </h3>
@@ -70,9 +73,7 @@ export default function Home() {
                 perfectas para cualquier ocasión.
               </p>
             </div>
-            {/* Feature 2: Share Your Creations */}
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              {/* Optional: Add an icon here */}
               <h3 className="text-2xl font-semibold text-orange-700 mb-3">
                 Comparte Tu Pasión
               </h3>
@@ -81,9 +82,7 @@ export default function Home() {
                 amantes de la gastronomía.
               </p>
             </div>
-            {/* Feature 3: Learn and Grow */}
             <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              {/* Optional: Add an icon here */}
               <h3 className="text-2xl font-semibold text-orange-700 mb-3">
                 Aprende y Evoluciona
               </h3>
@@ -96,9 +95,74 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Placeholder for other sections like "Popular Recipes", "Testimonials", "Call to Action for Submission" */}
+      {/* Popular Recipes Section with Images */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-orange-700 text-center mb-12">
+            Recetas Populares
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <div className="relative w-full h-48 mb-4">
+                <Image
+                  src="/pastaalpesto.jpg"
+                  alt="Pasta al Pesto"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-orange-700">Pasta al Pesto</h3>
+              <p className="text-gray-700 mt-2">Una receta clásica italiana.</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <div className="relative w-full h-48 mb-4">
+                <Image
+                  src="/tartademanzana.jpg"
+                  alt="Tarta de Manzana"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-orange-700">Tarta de Manzana</h3>
+              <p className="text-gray-700 mt-2">Postre dulce y fácil de hacer.</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+              <div className="relative w-full h-48 mb-4">
+                <Image
+                  src="/lentejas.jpg"
+                  alt="Sopa de Lentejas"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-orange-700">Sopa de Lentejas</h3>
+              <p className="text-gray-700 mt-2">Sabor casero y reconfortante.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Footer - Will be added later */}
+      {/* Enhanced Search Section */}
+      <section className="py-16 bg-orange-50">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-orange-700 mb-6">
+            Busca tu receta
+          </h2>
+          <div className="flex justify-center items-center gap-4">
+            <input
+              type="text"
+              placeholder="Ingredientes o nombre de receta"
+              className="w-full max-w-md px-4 py-2 border rounded-lg shadow-sm"
+            />
+            <button className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-6 rounded-lg">
+              Buscar
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
