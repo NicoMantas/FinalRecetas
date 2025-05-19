@@ -2,10 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import { auth } from "../../firebase/firebase.js"; // Corregir la ruta
-import { signInWithEmailAndPassword } from "firebase/auth"; // Removed unused createUserWithEmailAndPassword
+import { auth, db } from "../../firebase/firebase.js"; // Corregir la ruta e importar db
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import Link from "next/link"; // Import Link for navigation
+import Link from "next/link";
+import { doc, getDoc, updateDoc, serverTimestamp, increment } from "firebase/firestore"; // Importar funciones de Firestore
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,28 @@ export default function LoginPage() {
       return;
     }
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password); // Guardar userCredential
+      const user = userCredential.user; // Obtener el usuario
+
+      // Actualizar contador de logins
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        try {
+          // Usar increment para asegurar la atomicidad
+          await updateDoc(userDocRef, {
+            loginCount: increment(1),
+            lastLoginAt: serverTimestamp() // Opcional: guardar la fecha del último login
+          });
+        } catch (firestoreError) {
+          // Si el documento del usuario no existe aún (poco probable si el registro lo crea),
+          // o si hay un error al actualizar, lo registramos pero no bloqueamos el login.
+          // Considera crear el documento aquí si es un caso de uso posible.
+          console.error("Error updating user login stats: ", firestoreError);
+          // Podrías querer setearlo si es el primer login y el campo no existe
+          // await setDoc(userDocRef, { loginCount: 1, lastLoginAt: serverTimestamp() }, { merge: true });
+        }
+      }
+
       // alert("Inicio de sesión exitoso"); // Consider removing alert for better UX
       router.push("/home"); // Ajusta la ruta según tu página principal
     } catch (error) {

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import withAuth from "../components/withAuth";
 import CollapsibleSidebarLayout from '../components/CollapsibleSidebarLayout';
+import { auth } from '../../firebase/firebase';
 
 const createRecipe = async (recipeData) => {
   try {
@@ -31,12 +32,24 @@ const createRecipe = async (recipeData) => {
 function CreateRecipePage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [createdBy, setCreatedBy] = useState('');
+  const [currentUserUid, setCurrentUserUid] = useState(null);
   const [category, setCategory] = useState('Plato Principal');
   const [ingredients, setIngredients] = useState(['']);
   const [steps, setSteps] = useState([{ id: Date.now(), text: '', mediaUrl: null }]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setCurrentUserUid(user.uid);
+      } else {
+        setCurrentUserUid(null);
+        setError("Debes iniciar sesión para crear una receta.");
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const addIngredient = () => {
     setIngredients([...ingredients, '']);
@@ -55,8 +68,12 @@ function CreateRecipePage() {
   };
 
   const handleCreateRecipe = async () => {
-    if (!title || !description || !createdBy || ingredients.some(i => i.trim() === '') || steps.some(s => s.text.trim() === '')) {
-      setError('Por favor, complete todos los campos obligatorios.');
+    if (!currentUserUid) {
+      setError('Debes iniciar sesión para crear una receta. Por favor, recarga la página si ya iniciaste sesión.');
+      return;
+    }
+    if (!title || !description || ingredients.some(i => i.trim() === '') || steps.some(s => s.text.trim() === '')) {
+      setError('Por favor, complete todos los campos obligatorios (Nombre, Descripción, Ingredientes y Pasos).');
       return;
     }
 
@@ -66,7 +83,7 @@ function CreateRecipePage() {
     const recipeData = {
       title,
       description,
-      createdBy,
+      createdBy: currentUserUid,
       category,
       ingredients: ingredients.filter(i => i.trim() !== '').map(name => ({ name })),
       steps: steps.filter(s => s.text.trim() !== '').map(({ text, mediaUrl }) => ({ text, mediaUrl })),
@@ -74,13 +91,11 @@ function CreateRecipePage() {
 
     const result = await createRecipe(recipeData);
     if (result) {
-      // Optionally reset form or redirect
-      // setTitle('');
-      // setDescription('');
-      // setCreatedBy('');
-      // setCategory('Plato Principal');
-      // setIngredients(['']);
-      // setSteps([{ id: Date.now(), text: '', mediaUrl: null }]);
+      setTitle('');
+      setDescription('');
+      setCategory('Plato Principal');
+      setIngredients(['']);
+      setSteps([{ id: Date.now(), text: '', mediaUrl: null }]);
     }
     setIsLoading(false);
   };
@@ -114,18 +129,6 @@ function CreateRecipePage() {
             </div>
 
             <div>
-              <label htmlFor="createdBy" className="block text-sm font-semibold text-gray-700 mb-1">Autor:</label>
-              <input
-                id="createdBy"
-                type="text"
-                placeholder="Nombre del creador"
-                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
-                value={createdBy}
-                onChange={(e) => setCreatedBy(e.target.value)}
-              />
-            </div>
-
-            <div>
               <label htmlFor="recipeName" className="block text-sm font-semibold text-gray-700 mb-1">Nombre de la Receta:</label>
               <input
                 id="recipeName"
@@ -134,6 +137,7 @@ function CreateRecipePage() {
                 className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
               />
             </div>
 
@@ -146,13 +150,14 @@ function CreateRecipePage() {
                 rows="4"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
               ></textarea>
             </div>
 
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Ingredientes:</label>
               {ingredients.map((ingredient, index) => (
-                <div key={index} className="flex items-center gap-3">
+                <div key={index} className="flex items-center gap-3 mb-2">
                   <input
                     type="text"
                     className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
@@ -163,6 +168,7 @@ function CreateRecipePage() {
                       newIngredients[index] = e.target.value;
                       setIngredients(newIngredients);
                     }}
+                    required
                   />
                   {ingredients.length > 1 && (
                     <button
@@ -187,7 +193,7 @@ function CreateRecipePage() {
             <div className="space-y-3">
               <label className="block text-sm font-semibold text-gray-700 mb-1">Pasos:</label>
               {steps.map((step, index) => (
-                <div key={step.id} className="flex items-start gap-3">
+                <div key={step.id} className="flex items-start gap-3 mb-2">
                   <textarea
                     className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
                     rows="3"
@@ -198,6 +204,7 @@ function CreateRecipePage() {
                       newSteps[index].text = e.target.value;
                       setSteps(newSteps);
                     }}
+                    required
                   />
                   {steps.length > 1 && (
                      <button 
@@ -222,9 +229,9 @@ function CreateRecipePage() {
             <div className="flex justify-end pt-4">
               <button
                 type="submit"
-                disabled={isLoading}
-                className={`bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 ${
-                  isLoading ? "bg-orange-300 cursor-not-allowed" : ""
+                disabled={isLoading || !currentUserUid}
+                className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 ${
+                  (isLoading || !currentUserUid) ? "bg-orange-300 cursor-not-allowed" : ""
                 }`}
               >
                 {isLoading ? "Creando Receta..." : "Crear Receta"}
