@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 // Tus credenciales de Firebase obtenidas desde la consola de Firebase
 // Idealmente guardadas en variables de entorno (ej: .env.local)
@@ -26,5 +27,6 @@ if (!getApps().length) {
 
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
-export { app, db, auth };
+export { app, db, auth, storage };

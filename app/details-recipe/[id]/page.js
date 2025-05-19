@@ -292,7 +292,7 @@ function RecipeDetailPage() {
         <div style={buttonGroupStyle}>
           {fromFavorites ? (
             <>
-              <Link href="/favorites" passHref legacyBehavior>
+              <Link href="/favorites" passHref>
                 <button style={primaryButtonStyle}>Volver a Favoritos</button>
               </Link>
               <button onClick={handleToggleFavorite} style={isFavorite ? dangerButtonStyle : secondaryButtonStyle}>
@@ -301,10 +301,10 @@ function RecipeDetailPage() {
             </>
           ) : (
             <>
-              <Link href="/list-recipes" passHref legacyBehavior> {/* Default back button */} 
+              <Link href="/list-recipes" passHref > {/* Default back button */} 
                 <button style={primaryButtonStyle}>Volver al listado</button>
               </Link>
-              <Link href={`/edit-recipe/${id}`} passHref legacyBehavior>
+              <Link href={`/edit-recipe/${id}`} passHref >
                 <button style={secondaryButtonStyle}>Actualizar Receta</button>
               </Link>
               <button onClick={handleDelete} style={dangerButtonStyle}>Eliminar Receta</button>

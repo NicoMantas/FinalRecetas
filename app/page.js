@@ -25,7 +25,7 @@ export default function Home() {
               Blog
             </Link>
             <Link
-              href="/log-in"
+              href="/register"
               className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
             >
               Acceder
