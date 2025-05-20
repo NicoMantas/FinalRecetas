@@ -113,7 +113,9 @@ function CreateRecipePage() {
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                className="w-full mt-1 px-4 py-3 
+                border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 
+                focus:ring-orange-500 focus:border-orange-500 sm:text-sm text-black/70"
               >
                 <optgroup label="Tipo de comida" style={{ color: "black" }}>
                   <option>Plato Principal</option>
@@ -149,7 +151,9 @@ function CreateRecipePage() {
                 id="recipeName"
                 type="text"
                 placeholder="Ej: Tarta de Manzana Clásica"
-                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg 
+                shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
+                focus:border-orange-500 sm:text-sm placeholder-gray-400 text-black/80"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -161,7 +165,9 @@ function CreateRecipePage() {
               <textarea
                 id="description"
                 placeholder="Una breve descripción de tu receta..."
-                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg 
+                shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
+                focus:border-orange-500 sm:text-sm placeholder-gray-400 text-black/80"
                 rows="4"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -175,7 +181,9 @@ function CreateRecipePage() {
                 <div key={index} className="flex items-center gap-3 mb-2">
                   <input
                     type="text"
-                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg 
+                    shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 
+                    focus:border-orange-500 sm:text-sm placeholder-gray-400 text-black/80"
                     placeholder={`Ingrediente ${index + 1}`}
                     value={ingredient}
                     onChange={(e) => {
@@ -210,7 +218,7 @@ function CreateRecipePage() {
               {steps.map((step, index) => (
                 <div key={step.id} className="flex items-start gap-3 mb-2">
                   <textarea
-                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400"
+                    className="flex-grow mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm placeholder-gray-400 text-black/80"
                     rows="3"
                     placeholder={`Paso ${index + 1}`}
                     value={step.text}

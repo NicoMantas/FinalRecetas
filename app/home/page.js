@@ -219,7 +219,9 @@ function HomePage() {
               value={mainSearchQuery}
               onChange={(e) => setMainSearchQuery(e.target.value)}
               placeholder="Buscar por nombre o tipo de receta..."
-              className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base sm:text-lg"
+              className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg 
+              shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 
+              text-base sm:text-lg text-black/80"
             />
             <button
               type="submit"
