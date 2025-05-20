@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import withAuth from "../components/withAuth";
 import CollapsibleSidebarLayout from '../components/CollapsibleSidebarLayout';
 import { auth } from '../../firebase/firebase';
+import toast, { Toaster } from 'react-hot-toast';
 
-const createRecipe = async (recipeData) => {
+const createRecipeInApi = async (recipeData) => {
   try {
     const response = await fetch("/api/firestore/recipes", {
       method: "POST",
@@ -17,14 +18,14 @@ const createRecipe = async (recipeData) => {
 
     const result = await response.json();
     if (response.ok) {
-      alert("Receta creada con éxito!");
+      toast.success("Receta creada con éxito!");
       return result;
     } else {
-      alert("Error: " + result.error);
+      toast.error("Error al crear receta: " + (result.error || "Error desconocido"));
       return null;
     }
   } catch (error) {
-    alert("Error al crear receta: " + error.message);
+    toast.error("Error al crear receta: " + error.message);
     return null;
   }
 };
@@ -36,7 +37,6 @@ function CreateRecipePage() {
   const [category, setCategory] = useState('Plato Principal');
   const [ingredients, setIngredients] = useState(['']);
   const [steps, setSteps] = useState([{ id: Date.now(), text: '', mediaUrl: null }]);
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function CreateRecipePage() {
         setCurrentUserUid(user.uid);
       } else {
         setCurrentUserUid(null);
-        setError("Debes iniciar sesión para crear una receta.");
+        toast.error("Debes iniciar sesión para crear una receta.");
       }
     });
     return () => unsubscribe();
@@ -69,15 +69,14 @@ function CreateRecipePage() {
 
   const handleCreateRecipe = async () => {
     if (!currentUserUid) {
-      setError('Debes iniciar sesión para crear una receta. Por favor, recarga la página si ya iniciaste sesión.');
+      toast.error('Debes iniciar sesión para crear una receta. Por favor, recarga la página si ya iniciaste sesión.');
       return;
     }
     if (!title || !description || ingredients.some(i => i.trim() === '') || steps.some(s => s.text.trim() === '')) {
-      setError('Por favor, complete todos los campos obligatorios (Nombre, Descripción, Ingredientes y Pasos).');
+      toast.error('Por favor, complete todos los campos obligatorios (Nombre, Descripción, Ingredientes y Pasos).');
       return;
     }
 
-    setError('');
     setIsLoading(true);
 
     const recipeData = {
@@ -89,7 +88,7 @@ function CreateRecipePage() {
       steps: steps.filter(s => s.text.trim() !== '').map(({ text, mediaUrl }) => ({ text, mediaUrl })),
     };
 
-    const result = await createRecipe(recipeData);
+    const result = await createRecipeInApi(recipeData);
     if (result) {
       setTitle('');
       setDescription('');
@@ -102,15 +101,10 @@ function CreateRecipePage() {
 
   return (
     <CollapsibleSidebarLayout>
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="p-4 md:p-8">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 space-y-6">
           <h1 className="text-3xl md:text-4xl font-bold text-center text-orange-600 mb-8">Crear Nueva Receta</h1>
-
-          {error && 
-            <div className="p-3 mb-4 bg-red-100 text-red-700 border border-red-300 rounded-lg text-center">
-              {error}
-            </div>
-          }
 
           <form onSubmit={(e) => { e.preventDefault(); handleCreateRecipe(); }} className="space-y-6">
             <div>

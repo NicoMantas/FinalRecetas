@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import CollapsibleSidebarLayout from "../components/CollapsibleSidebarLayout";
 import Link from "next/link";
 import Image from 'next/image';
+import toast, { Toaster } from 'react-hot-toast';
 
 function UserProfilePage() {
   const router = useRouter();
@@ -18,65 +19,69 @@ function UserProfilePage() {
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  const [settingsError, setSettingsError] = useState("");
   const [settingsLoading, setSettingsLoading] = useState(false);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUser({
-        name: currentUser.displayName || "Usuario", // Simpler default
+        name: currentUser.displayName || "Usuario",
         email: currentUser.email || "",
         photoUrl: currentUser.photoURL || "https://randomuser.me/api/portraits/men/44.jpg",
       });
       setNewName(currentUser.displayName || "Usuario");
+    } else {
+        toast.error("Usuario no encontrado, por favor inicia sesión.");
+        router.push("/log-in");
     }
-  }, []); // Runs once on mount
+  }, []);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      toast.success("Cierre de sesión exitoso.");
       router.push("/log-in");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
-      alert("Hubo un error al cerrar sesión.");
+      toast.error("Hubo un error al cerrar sesión: " + error.message);
     }
   };
 
   const handleOpenSettingsModal = () => {
     setNewName(user.name);
-    setSettingsError("");
     setIsSettingsModalOpen(true);
   };
 
   const handleUpdateSettings = async () => {
-    setSettingsError("");
     setSettingsLoading(true);
     const currentUser = auth.currentUser;
 
     if (!currentUser) {
-      setSettingsError("No hay usuario autenticado.");
+      toast.error("No hay usuario autenticado. Intenta iniciar sesión de nuevo.");
+      setSettingsLoading(false);
+      setIsSettingsModalOpen(false);
+      router.push("/log-in");
+      return;
+    }
+
+    if (newName.trim() === '') {
+      toast.error("El nombre de usuario no puede estar vacío.");
       setSettingsLoading(false);
       return;
     }
 
     try {
-      // Update Display Name if changed
-      if (newName.trim() !== '' && newName !== user.name) {
+      if (newName.trim() !== user.name) {
         await updateProfile(currentUser, { displayName: newName.trim() });
         setUser(prev => ({ ...prev, name: newName.trim() })); 
-      } else if (newName.trim() === '') {
-        setSettingsError("El nombre de usuario no puede estar vacío.");
-        setSettingsLoading(false);
-        return;
+        toast.success("Nombre de usuario actualizado con éxito.");
       } else {
-        // Name is the same or only whitespace changes to the same name, no update needed
+        toast.info("El nombre de usuario es el mismo, no se realizaron cambios.");
       }
-
       setIsSettingsModalOpen(false);
     } catch (error) {
       console.error("Error al actualizar perfil:", error);
-      setSettingsError("Error al actualizar el nombre: " + error.message);
+      toast.error("Error al actualizar el nombre: " + error.message);
     } finally {
       setSettingsLoading(false);
     }
@@ -96,6 +101,7 @@ function UserProfilePage() {
 
   return (
     <CollapsibleSidebarLayout>
+      <Toaster position="top-center" reverseOrder={false} />
       <div style={profilePageMainStyle}>
         {/* Profile Card - Refactored with Tailwind CSS */}
         <div className="bg-white rounded-xl shadow-2xl p-8 md:p-10 w-full max-w-md md:max-w-lg transform transition-all duration-500 hover:scale-105">
@@ -166,12 +172,6 @@ function UserProfilePage() {
               <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 text-center">
                 Actualizar Nombre de Usuario
               </h2>
-              
-              {settingsError && (
-                <p className="bg-red-100 text-red-700 p-3 rounded-md mb-4 text-sm text-center">
-                  {settingsError}
-                </p>
-              )}
               
               <div className="mb-6">
                 <label htmlFor="userNameInput" className="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario:</label>

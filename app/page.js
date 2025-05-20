@@ -11,15 +11,6 @@ export default function Home() {
             ReinventandoCocina
           </Link>
           <div className="space-x-4">
-            <Link href="/recipes" className="hover:text-orange-500">
-              Recetas
-            </Link>
-            <Link href="/categories" className="hover:text-orange-500">
-              Categorías
-            </Link>
-            <Link href="/blog" className="hover:text-orange-500">
-              Blog
-            </Link>
             <Link
               href="/register"
               className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300"
