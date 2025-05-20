@@ -114,22 +114,43 @@ function CreateRecipePage() {
 
           <form onSubmit={(e) => { e.preventDefault(); handleCreateRecipe(); }} className="space-y-6">
             <div>
-              <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-1">Categoría:</label>
+              <label htmlFor="category" className="block text-sm font-semibold mb-1" style={{ color: "black" }}>Categoría:</label>
               <select
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full mt-1 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
               >
-                <option>Plato Principal</option>
-                <option>Postre</option>
-                <option>Bebida</option>
-                <option>Aperitivo</option>
+                <optgroup label="Tipo de comida" style={{ color: "black" }}>
+                  <option>Plato Principal</option>
+                  <option>Aperitivo</option>
+                  <option>Postre</option>
+                  <option>Bebida</option>
+                </optgroup>
+                <optgroup label="Momento del día" style={{ color: "black" }}>
+                  <option>Desayuno</option>
+                  <option>Almuerzo</option>
+                  <option>Cena</option>
+                  <option>Snack</option>
+                </optgroup>
+                <optgroup label="Estilo / Dieta" style={{ color: "black" }}>
+                  <option>Vegetariano</option>
+                  <option>Vegano</option>
+                  <option>Sin Gluten</option>
+                  <option>Light / Baja en calorías</option>
+                </optgroup>
+                <optgroup label="Cocinas del mundo" style={{ color: "black" }}>
+                  <option>Mexicana</option>
+                  <option>Italiana</option>
+                  <option>Japonesa</option>
+                  <option>India</option>
+                  <option>Mediterránea</option>
+                </optgroup>
               </select>
             </div>
 
             <div>
-              <label htmlFor="recipeName" className="block text-sm font-semibold text-gray-700 mb-1">Nombre de la Receta:</label>
+              <label htmlFor="recipeName" className="block text-sm font-semibold mb-1" style={{ color: "black" }}>Nombre de la Receta:</label>
               <input
                 id="recipeName"
                 type="text"
@@ -142,7 +163,7 @@ function CreateRecipePage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-1">Descripción Corta:</label>
+              <label htmlFor="description" className="block text-sm font-semibold mb-1" style={{ color: "black" }}>Descripción Corta:</label>
               <textarea
                 id="description"
                 placeholder="Una breve descripción de tu receta..."
@@ -155,7 +176,7 @@ function CreateRecipePage() {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Ingredientes:</label>
+              <label className="block text-sm font-semibold mb-1" style={{ color: "black" }}>Ingredientes:</label>
               {ingredients.map((ingredient, index) => (
                 <div key={index} className="flex items-center gap-3 mb-2">
                   <input
@@ -191,7 +212,7 @@ function CreateRecipePage() {
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Pasos:</label>
+              <label className="block text-sm font-semibold mb-1" style={{ color: "black" }}>Pasos:</label>
               {steps.map((step, index) => (
                 <div key={step.id} className="flex items-start gap-3 mb-2">
                   <textarea
